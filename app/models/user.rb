@@ -28,7 +28,7 @@ class User
   field :last_sign_in_at,    :type => Time
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
-
+  
   ## Confirmable
   # field :confirmation_token,   :type => String
   # field :confirmed_at,         :type => Time
@@ -44,7 +44,20 @@ class User
   # field :authentication_token, :type => String
   # run 'rake db:mongoid:create_indexes' to create indexes
   index({ email: 1 }, { unique: true, background: true })
-  field :name, :type => String
+  index({ api_key: 1 }, { unique: true, background: true })
+
+    field :name, :type => String
   validates_presence_of :name
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :created_at, :updated_at
+  has_many :devices
+  has_many :feeds
+  field  :api_key, :type=>String
+  def getApiKey
+    if self[:api_key]==nil
+      self[:api_key]=Digest::MD5.hexdigest(_id.to_s+Time.now.to_s)
+      self.save
+    end
+    return self[:api_key]
+  end
+
 end

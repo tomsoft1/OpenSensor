@@ -1,4 +1,12 @@
 <h3>User</h3>
 <p>User: <%= @user.name %></p>
 <p>Email: <%= @user.email if @user.email %></p>
-<%= link_to 'Edit account', edit_user_path %>
+<p>API_KEY: <%= @user.getApiKey  %></p>
+<%= link_to 'Edit account', edit_user_path,:class=>"btn btn-primary" %>
+<h4>Devices</h4>
+<% @user.devices.each do |device| %>
+<h5><%= link_to device.name,device_path(device) %></h5>	
+<% end%>
+<br/>
+<%=link_to "add device",new_device_path,:class=>"btn btn-primary" %>
+<br/>
