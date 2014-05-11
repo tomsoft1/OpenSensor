@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Timestamp:</b>
+  <%= @measure.timeStamp %>
+</p>
+
+<p>
+  <b>Value:</b>
+  <%= @measure.value %>
+</p>
+
+
+<%= link_to 'Edit', edit_measure_path(@measure) %> |
+<%= link_to 'Back', measures_path %>

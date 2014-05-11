@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+
+
+<p>
+  <b>Name:</b>
+  <%= @feed.name %>
+</p>
+<p>
+  <b>Unit:</b>
+  <%= @feed.unit %>
+</p>
+<p>
+  <b>Type:</b>
+  <%= @feed.type %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @feed.description %><br>
+  <%= "Total:#{@feed.measures.count}" %><br/>
+  <% if @feed.last_measure %>
+  <%= "Last:#{@feed.last_measure.value}" %>
+  <% end %>
+</p>
+
+<p>
+  <b>Attached on device:</b>
+  <%= link_to @feed.device.name,device_path(@feed.device) %>
+</p>
+<p>
+</p>
+<%= link_to 'Edit', edit_feed_path(@feed) %> |
+<%= link_to 'Back', feeds_path %>

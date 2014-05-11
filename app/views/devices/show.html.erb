@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <b>Name:</b>
+  <%= @device.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @device.description %>
+</p>
+<p>
+	<b>Feeds:</b><br>
+	<% @device.feeds.each do |feed|%>
+<h5><%= link_to feed.name,feed_path(feed) %><%= "(#{feed.measures.count} measures)" %></h5>
+	<% end %>
+</p>
+<br>
+<%= link_to "New feed","/feeds/new?device=#{@device.id}",:class=>"btn btn-primary btn-" %>
+<br>
+<br>
+
+<%= link_to 'Edit', edit_device_path(@device) %> |
+<%= link_to 'Back', devices_path %>
