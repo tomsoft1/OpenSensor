@@ -1,15 +1,16 @@
 # config valid only for Capistrano 3.1
 lock '3.2.1'
 
-set :application, 'my_app_name'
-set :repo_url, 'git@example.com:me/my_repo.git'
+set :application, 'OpenSensor'
+set :repo_url, 'git@github.com:tomsoft1/OpenSensor.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-# set :deploy_to, '/var/www/my_app'
-
+set :deploy_to, '/home/tomsoft/www/opensensor'
+set :rvm_type, :system
+set :rvm_ruby_version, '1.9.3@opensensor'
 # Default value for :scm is :git
 # set :scm, :git
 
@@ -26,13 +27,13 @@ set :repo_url, 'git@example.com:me/my_repo.git'
 # set :linked_files, %w{config/database.yml}
 
 # Default value for linked_dirs is []
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-# set :keep_releases, 5
+ set :keep_releases, 5
 
 namespace :deploy do
 

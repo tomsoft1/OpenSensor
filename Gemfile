@@ -28,6 +28,9 @@ group :development, :test do
   gem 'thin'
   gem 'pry'
   gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
 end
 group :test do
   gem 'capybara'
