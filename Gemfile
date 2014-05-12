@@ -31,6 +31,7 @@ group :development, :test do
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
+#  gem 'rvm1-capistrano3', require: false
 end
 group :test do
   gem 'capybara'
