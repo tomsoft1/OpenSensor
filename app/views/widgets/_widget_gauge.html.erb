@@ -1,0 +1,38 @@
+
+<% widget=locals[:widget] %>
+<% if widget.feed %>
+<script>
+google.setOnLoadCallback(drawChart_<%= widget.id -%>);
+function drawChart_<%= widget.id -%>() {
+	var data = google.visualization.arrayToDataTable([
+		['Label', 'Value'],
+		['<% widget.feed.unit%>', <%= widget.feed.last_measure.value -%>],
+	]);
+
+	var options = {
+		width: 200, height: 120,
+		redFrom: 90, redTo: 100,
+		yellowFrom:75, yellowTo: 90,
+		minorTicks: 5
+	};
+	var chart = new google.visualization.Gauge(document.getElementById('chart_div_<%= widget.id -%>'));
+	chart.draw(data, options);
+	var widget=Widget.widgets['<%= widget.id -%>'];
+	widget.chart=chart;
+	widget.data=data;
+	widget.options=options;
+}
+// Widget initialisation
+{
+	var tmp=Widget.widgets["<%= widget.id %>"];
+	tmp.on_update=function(message){
+		this.data.setValue(0,1,message.data.value);
+		this.chart.draw(this.data, this.options);
+	}
+}
+</script>      
+ </script>
+ <div id='chart_div_<%= widget.id -%>'></div>
+ <% else %>
+ Widget not linked to a feed 
+ <% end %>

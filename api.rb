@@ -2,8 +2,11 @@ require 'rubygems' if RUBY_VERSION < '1.9'
 require 'sinatra'
 require "sinatra/reloader" if development?
 require 'mongoid'
-
+require 'pusher'
 require ::File.dirname(__FILE__) + '/config/environment'
+
+Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
+
 
 configure do
   Mongoid.load!("config/mongoid.yml")
@@ -72,6 +75,7 @@ end
 post "/device/:device_id" do 
 	errors=[]
 	device=Device.find params["device_id"]
+	feeds=[]
 	newMeasure=JSON.parse request.body.read
 	newMeasure.each do |feed_data|
 		begin
@@ -79,6 +83,14 @@ post "/device/:device_id" do
 				feed=Feed.find(feed_data["feed_id"])
 			else
 				feed=Feed.where(:name=>feed_data["name"]).first
+				if feed==nil
+					puts "Creating feed:#{feed_data['name']}"
+					feed=Feed.new(:name=>feed_data["name"])
+					feed.device=device
+					feed.save
+				else
+					puts "Feed found"
+				end
 			end
 		rescue Exception =>e
 			puts e
@@ -90,9 +102,32 @@ post "/device/:device_id" do
 			if feed_data["timestamp"] then measure.timeStamp=Time.at feed_data["timestamp"] end
 			measure.feed=feed
 			measure.save
+			feeds<<feed
 		end
 	end
 	res={}
+	@current_user.dashboards.each do |dashboard|
+		widgets=[]
+		dashboard.widgets.each do |widget|
+			if feeds.include? widget.feed
+				widgets<<{:_id=>widget.id,:data=>widget.feed.last_measure.as_json}
+			end
+		end
+		publish_on dashboard,widgets unless widgets.size==0
+
+	end
 	if errors.size>0 then res[:errors]=errors.join(',') end
 	res.to_json
 end
+
+def publish_on dashboard,content
+
+    if dashboard.active_channel?
+       Pusher["dashboard-#{dashboard.id}"].trigger('update', content)
+    else
+      puts "Channel:#{dashboard.name} inactive"
+    end
+end
+
+
+

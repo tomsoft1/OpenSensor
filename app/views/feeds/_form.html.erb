@@ -23,7 +23,7 @@
   </div>
     <div class="field">
     <%= f.label :type %><br />
-    <%= f.text_field :type %>
+    <%= f.select(:type,options_for_select(%w(Float Int Binary String),:selected => @feed.type)) %>
   </div>  <div class="field">
     <%= f.label :description %><br />
     <%= f.text_field :description %>

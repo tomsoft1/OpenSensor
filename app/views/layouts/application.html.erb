@@ -75,21 +75,28 @@
     </div>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
 <% if @current_user %>
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"><%= @current_user.name+":" %></li>
              
               <li><%= link_to "User Profile", user_path(@current_user) %></li>
-              <li><%= link_to "Devices", devices_path %><%= "(#{@current_user.devices.count})" %></li>
-              <li><%= link_to "Feeds", feeds_path  %> <%= "(#{@current_user.feeds.count})" %></li>
+              <li><%= link_to "Devices (#{@current_user.devices.count})", devices_path %></li>
+              <li><%= link_to "Feeds (#{@current_user.feeds.count})", feeds_path  %></li>
+              <li><%= link_to "Dashboard", dashboards_path  %> </li>
+              <ul>
+               <% @current_user.dashboards.each do |dashboard| %>
+                 <li><%= link_to "#{dashboard.name}", dashboard_path(dashboard)  %> </li>
+                <% end %>
+              </ul>
+
             </ul>
           </div><!--/.well -->
 <% end %>
         </div><!--/span-->
 
-        <div class="span9">
+        <div class="span10">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>

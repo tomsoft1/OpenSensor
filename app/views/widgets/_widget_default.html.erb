@@ -1,0 +1,11 @@
+<% widget=locals[:widget] %>
+<script type="text/javascript">
+{
+	var tmp=Widget.widgets["<%= widget.id %>"];
+	tmp.on_update=function(message){
+		$("#measure_"+this._id).text(message.data.value);
+	}
+	tmp_<%= widget.id -%>=tmp;
+}
+</script>
+<H4><span id="measure_<%= widget.id -%>"><%= last_measure widget %></span></H4>

@@ -4,6 +4,8 @@ gem 'rails', '3.2.13'
 gem "twitter-bootstrap-rails"
 gem "sinatra"
 gem "sinatra-contrib"
+gem 'pusher'
+gem 'mqtt'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
@@ -24,7 +26,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'thin'
-   gem 'pry'
+  gem 'pry'
+  gem 'capistrano'
 end
 group :test do
   gem 'capybara'

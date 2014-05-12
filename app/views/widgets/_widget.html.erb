@@ -1,0 +1,11 @@
+<li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+<div class="header"><%= widget.name %> <span class="edit"><%= link_to "E",edit_widget_path(widget) %> </span></div>
+<script type="text/javascript">
+Widget.addWidget("<%= widget.id -%>",{
+	on_update:function(value){
+		console.log(value);
+	}
+});
+</script>
+<%= render widget_partial_name(widget),locals: {widget: widget} %>
+</li>

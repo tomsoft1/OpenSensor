@@ -1,0 +1,35 @@
+<%= form_for(@widget) do |f| %>
+  <% if @widget.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@widget.errors.count, "error") %> prohibited this widget from being saved:</h2>
+
+      <ul>
+      <% @widget.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <%= f.hidden_field :dashboard_id %>
+    <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br />
+   <%= f.select(:type,options_for_select(["Default","Gauge","Chart"],:selected => @widget.type)) %>
+  </div>
+  <div class="field">
+    <%= f.label :feed %><br />
+    <%= f.select(:feed_id,options_for_select(@widget.dashboard.user.feeds.map{|f|[f.name,f.id]},:selected => @widget.feed_id)) %>
+  </div>
+
+    <div class="field">
+    <%= f.label :input %><br />
+    <%= f.text_field :input %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

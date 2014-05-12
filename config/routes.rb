@@ -1,4 +1,13 @@
 OpenSensor::Application.routes.draw do
+  resources :widgets
+
+
+  resources :dashboards do
+   collection do
+      get 'subscribe'
+    end
+  end
+  
   resources :measures
 
 
