@@ -34,9 +34,10 @@ class FeedsController < ApplicationController
   # GET /feeds/new.json
   def new
     @feed = Feed.new
-    device=Device.find params[:device]
-    @feed.device=device
-    @feed.user=user
+    if params[:device]
+      device=Device.find params[:device]
+      @feed.device=device
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @feed }
@@ -52,7 +53,8 @@ class FeedsController < ApplicationController
   # POST /feeds.json
   def create
     @feed = Feed.new(params[:feed])
-
+    @feed.user=@current_user
+    
     respond_to do |format|
       if @feed.save
         format.html { redirect_to @feed, notice: 'Feed was successfully created.' }

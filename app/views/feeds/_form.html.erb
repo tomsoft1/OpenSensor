@@ -12,12 +12,15 @@
   <% end %>
 
 
-    <%= f.hidden_field :device_id %>
     <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
   <div class="field">
+    <%= f.label :device %><br />
+    <%= f.select(:device_id,options_for_select(@current_user.devices.map{|d|[d.name,d.id]},:selected => @feed.device_id)) %>
+  </div>
+    <div class="field">
     <%= f.label :unit %><br />
     <%= f.text_field :unit %>
   </div>

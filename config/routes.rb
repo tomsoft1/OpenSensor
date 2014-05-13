@@ -5,6 +5,7 @@ OpenSensor::Application.routes.draw do
   resources :dashboards do
    collection do
       get 'subscribe'
+      post 'webhook'
     end
   end
   
@@ -26,4 +27,7 @@ OpenSensor::Application.routes.draw do
   root :to => "home#index"
   devise_for :users
   resources :users
+
+
+
 end
