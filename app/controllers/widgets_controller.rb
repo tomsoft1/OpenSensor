@@ -26,8 +26,10 @@ class WidgetsController < ApplicationController
   def new
     @widget = Widget.new
     @widget.dashboard=Dashboard.find params[:dashboard]
+    @widget.element_prototype
+    if params[:type] then @widget.type=params[:type] end
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { if !params[:type] then render "select_type" else render end}
       format.json { render json: @widget }
     end
   end
@@ -61,7 +63,7 @@ class WidgetsController < ApplicationController
   def update
     @widget = Widget.find(params[:id])
       if @widget.update_attributes(params[:widget])
-        @widget.set(:element_protoype_id,Widget.find_prototype(@widget.type))
+        @widget.element_prototype=Widget.find_prototype(@widget.type)
         redirect_to @widget.dashboard
       end
       return

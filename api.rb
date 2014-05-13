@@ -1,6 +1,6 @@
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'sinatra'
-require "sinatra/reloader" if development?
+require "sinatra/reloader" #if development?
 require 'mongoid'
 require 'pusher'
 require ::File.dirname(__FILE__) + '/config/environment'
@@ -49,19 +49,31 @@ class OpenSensorApi < Sinatra::Base
 
 
 	get "/sensor/:sensor_id" do
-		sensor=Sensors.find params["sensor_id"]
-		return sensor.to_json
-		#	return params
+		sensor=Sensor.find params["sensor_id"]
+		sensor.as_json[:count]=sensor.measures.count
 	end
 
+	get "/sensor" do
+		@current_user.sensors.as_json
+	end
 	post "/sensor/:sensor_id" do
-		sensor=Sensors.find params["sensor_id"]
-		puts params
+		sensor=Sensor.find params["sensor_id"]
+		puts sensor
 		newMeasure=JSON.parse request.body.read
 		measure=Measure.new(newMeasure)
 		measure.sensor=sensor
 		measure.save
 		{:code=>1}.to_json
+	end
+
+	get "/sensor/:sensor_id/measures" do
+		sensor=Sensor.find params["sensor_id"]
+		puts sensor
+		sensor.measures.map{|m|[m.timeStamp,m.value]}.to_json
+	end
+	get "/devices" do
+		devices=@current_user.devices
+		devices.to_json
 	end
 
 	get "/device/:device_id" do
@@ -127,6 +139,7 @@ class OpenSensorApi < Sinatra::Base
 	def publish_on dashboard,content
 
 		if dashboard.active_channel?
+			puts "Published:#{dashboard.name} #{content}"
 			Pusher["dashboard-#{dashboard.id}"].trigger('update', content)
 		else
 			puts "Channel:#{dashboard.name} inactive"
@@ -135,4 +148,4 @@ class OpenSensorApi < Sinatra::Base
 
 end
 
-#OpenSensoreApi.run!
+OpenSensorApi.run!

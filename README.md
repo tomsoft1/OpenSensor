@@ -7,6 +7,8 @@ the prupose of this project is to provides an open source framework for the coll
 
 Provides similar function to others commercial paltforms (Xively, Ubicod, Open.sene, etc...) but with a free implementation
 
+The platform itself is live and running at http://opensensor.myapp.fr
+
 With this you can:
 * manage and collect information from your sensors
 * connect your internet of things project

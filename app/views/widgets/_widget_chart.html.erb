@@ -26,16 +26,17 @@ $(function () {
             tooltip: {
                 valueSuffix: '°C'
             },
-//            legend: {
+            legend: {
+                enabled:false,
  //               layout: 'vertical',
  //               align: 'right',
  //               verticalAlign: 'middle',
  //               borderWidth: 0
- //           },
+            },
             series: [{
                 id:1,
                 name: '<%= widget.sensor.name -%>',
-                data: [<%= widget.sensor.measures[-[15,widget.sensor.measures.size].min..0].map{|v| v.value}.join(',') -%>]
+                data: [<%= widget.sensor.measures[-[15,widget.sensor.measures.size].min..-1].map{|v| v.value}.join(',') -%>]
             }]
         };
 //    tmp.chart=$('#container_<%= widget.id -%>').highcharts(tmp.options);

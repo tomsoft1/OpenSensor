@@ -1,5 +1,5 @@
 class DashboardsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!,:except=>[:show]
   # GET /dashboards
   # GET /dashboards.json
   def index
@@ -15,10 +15,11 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1.json
   def show
     @dashboard = Dashboard.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @dashboard }
+    if @dashboard.is_public || authenticate_user! || @dashboard.user==@current_user
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @dashboard }
+      end
     end
   end
 

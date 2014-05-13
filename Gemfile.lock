@@ -32,9 +32,6 @@ GEM
     arel (3.0.3)
     backports (3.6.0)
     bcrypt (3.1.7)
-    better_errors (1.1.0)
-      coderay (>= 1.0.0)
-      erubis (>= 2.6.6)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.0.4)
@@ -252,7 +249,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  better_errors
   binding_of_caller
   capistrano
   capistrano-bundler

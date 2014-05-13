@@ -1,9 +1,9 @@
 module WidgetsHelper
 
 	def widget_partial_name widget
-		name=widget.type.downcase
-		if !["chart","gauge"].include?(name) then name="default" end
-		"widgets/widget_#{name}"
+		name=widget.type
+		if !Widget.types.include?(name) then name="default" end
+		"widgets/widget_#{name.downcase}"
 	end
 
 	def last_measure widget

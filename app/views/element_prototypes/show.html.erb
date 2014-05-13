@@ -4,6 +4,15 @@
   <b>Name:</b>
   <%= @element_prototype.name %>
 </p>
+<p>
+  <b>Description:</b>
+  <%= @element_prototype.description %>
+</p>
+<table>
+	<% @element_prototype.parameter_def.each do |param| %>
+	<tr><td><%= param.name %></td><td><%= param.class %></td></tr>
+	<% end %>
+</table>
 
 
 <%= link_to 'Edit', edit_element_prototype_path(@element_prototype) %> |

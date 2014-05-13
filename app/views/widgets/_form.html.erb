@@ -10,34 +10,35 @@
       </ul>
     </div>
   <% end %>
-
+    <H3>Type:<%= "#{@widget.type}" %></H3>
     <%= f.hidden_field :dashboard_id %>
+    <%= f.hidden_field :type %>
+
     <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :type %><br />
-   <%= f.select(:type,options_for_select(["Default","Gauge","Chart"],:selected => @widget.type)) %>
-  </div>
-  <div class="field">
-    <%= f.label :sensor %><br />
-    <%= f.select(:sensor_id,options_for_select(@widget.dashboard.user.sensors.map{|s|[s.name,s.id]},:selected => @widget.sensor_id)) %>
+    <%= f.label :color %><br />
+    <%= f.select(:color,options_for_select(%w(gray yellow red green blue pink black),:selected => @widget.color)) %>
   </div>
 
     <div class="field">
-    <%= f.label :input %><br />
-    <%= f.text_field :input %>
+    <%= f.label :sensor %><br />
+    <%= f.select(:sensor_id,options_for_select(@widget.dashboard.user.sensors.map{|s|[s.name,s.id]},:selected => @widget.sensor_id)) %>
   </div>
-<% if @widget.element_prototype %>
-<% @widget.element_prototype.parameter_def.each do |param| %>
+<% if @widget.get_prototype %>
+<% @widget.ensure_params %>
+<% @widget.get_prototype.parameter_def.each do |param| %>
     <div class="field">
-    <%= f.label param.name.downcase.to_sym %><br />
+    <%= f.label param.name_param.to_sym %><br />
     <% case param.class.to_s  %>
     <% when ParameterEnum.to_s %>
-    <%=       f.select(param.name.downcase.to_sym,options_for_select(param.values),:selected => @widget[param.name.downcase]) %>
+    <%=       f.select(param.name_param.to_sym,options_for_select(param.values,:selected => @widget[param.name_param])) %>
+    <% when ParameterSensor.to_s %>
+    <%=       f.select(param.name_param.to_sym,options_for_select(@widget.dashboard.user.sensors.map{|s|[s.name,s.id]},:selected => @widget[param.name_param])) %>
     <% else %>
-    <%=       f.text_field param.name.downcase.to_sym %>  
+    <%=       f.text_field param.name_param.to_sym %>  
     <% end %>
   </div>
 
