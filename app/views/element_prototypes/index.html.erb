@@ -1,0 +1,23 @@
+<h1>Listing element_prototypes</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @element_prototypes.each do |element_prototype| %>
+  <tr>
+    <td><%= element_prototype.name %></td>
+    <td><%= link_to 'Show', element_prototype %></td>
+    <td><%= link_to 'Edit', edit_element_prototype_path(element_prototype) %></td>
+    <td><%= link_to 'Destroy', element_prototype, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Element prototype', new_element_prototype_path %>

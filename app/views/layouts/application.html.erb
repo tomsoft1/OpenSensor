@@ -54,7 +54,7 @@
               <% if isUserAdmin? %>
               <li><%= link_to "Users", users_path  %></li>
               <li><%= link_to "Devices", devices_path  %></li>
-              <li><%= link_to "Feeds", feeds_path  %></li>
+              <li><%= link_to "Sensors", sensors_path  %></li>
               <li><%= link_to "Mesures", measures_path  %></li>
               <% end %>
             </ul>
@@ -83,7 +83,7 @@
              
               <li><%= link_to "User Profile", user_path(@current_user) %></li>
               <li><%= link_to "Devices (#{@current_user.devices.count})", devices_path %></li>
-              <li><%= link_to "Feeds (#{@current_user.feeds.count})", feeds_path  %></li>
+              <li><%= link_to "Sensors (#{@current_user.sensors.count})", sensors_path  %></li>
               <li><%= link_to "Dashboard", dashboards_path  %> </li>
               <ul>
                <% @current_user.dashboards.each do |dashboard| %>

@@ -8,7 +8,7 @@ module WidgetsHelper
 
 	def last_measure widget
 		if widget.feed && measure=widget.feed.last_measure
-			measure.value.to_s+" "+widget.feed.unit
+			measure.value.to_s
 		else
 			"N/A"
 		end

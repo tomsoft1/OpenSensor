@@ -1,4 +1,13 @@
 OpenSensor::Application.routes.draw do
+  resources :element_prototypes
+
+
+  resources :sensors
+
+
+  resources :triggers
+
+
   resources :widgets
 
 
@@ -20,9 +29,8 @@ OpenSensor::Application.routes.draw do
 
   resources :devices
 
-
   authenticated :user do
-    root :to => 'home#index'
+    root :to => 'users#index'
   end
   root :to => "home#index"
   devise_for :users

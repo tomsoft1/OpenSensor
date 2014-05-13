@@ -21,14 +21,30 @@
    <%= f.select(:type,options_for_select(["Default","Gauge","Chart"],:selected => @widget.type)) %>
   </div>
   <div class="field">
-    <%= f.label :feed %><br />
-    <%= f.select(:feed_id,options_for_select(@widget.dashboard.user.feeds.map{|f|[f.name,f.id]},:selected => @widget.feed_id)) %>
+    <%= f.label :sensor %><br />
+    <%= f.select(:sensor_id,options_for_select(@widget.dashboard.user.sensors.map{|s|[s.name,s.id]},:selected => @widget.sensor_id)) %>
   </div>
 
     <div class="field">
     <%= f.label :input %><br />
     <%= f.text_field :input %>
   </div>
+<% if @widget.element_prototype %>
+<% @widget.element_prototype.parameter_def.each do |param| %>
+    <div class="field">
+    <%= f.label param.name.downcase.to_sym %><br />
+    <% case param.class.to_s  %>
+    <% when ParameterEnum.to_s %>
+    <%=       f.select(param.name.downcase.to_sym,options_for_select(param.values),:selected => @widget[param.name.downcase]) %>
+    <% else %>
+    <%=       f.text_field param.name.downcase.to_sym %>  
+    <% end %>
+  </div>
+
+<% end %>
+
+<% end %>
+
   <div class="actions">
     <%= f.submit %>
   </div>

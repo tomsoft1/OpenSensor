@@ -1,12 +1,12 @@
 
 <% widget=locals[:widget] %>
-<% if widget.feed %>
+<% if widget.sensor %>
 <script>
 google.setOnLoadCallback(drawChart_<%= widget.id -%>);
 function drawChart_<%= widget.id -%>() {
 	var data = google.visualization.arrayToDataTable([
 		['Label', 'Value'],
-		['<% widget.feed.unit%>', <%= widget.feed.last_measure.value -%>],
+		['<% widget.sensor.unit%>', <%= widget.sensor.last_measure.value -%>],
 	]);
 
 	var options = {
@@ -34,5 +34,5 @@ function drawChart_<%= widget.id -%>() {
  </script>
  <div id='chart_div_<%= widget.id -%>'></div>
  <% else %>
- Widget not linked to a feed 
+ Widget not linked to a sensor 
  <% end %>

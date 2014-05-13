@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @trigger.name %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @trigger.type %>
+</p>
+
+<p>
+  <b>Limit:</b>
+  <%= @trigger.limit %>
+</p>
+
+<p>
+  <b>Operator:</b>
+  <%= @trigger.operator %>
+</p>
+
+
+<%= link_to 'Edit', edit_trigger_path(@trigger) %> |
+<%= link_to 'Back', triggers_path %>

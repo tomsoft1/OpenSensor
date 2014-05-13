@@ -3,7 +3,7 @@ class Measure
   field :timeStamp, type: Time, default: Time.now
   field :value ,type:Float
 
-  belongs_to :feed
+  belongs_to :sensor
 
-    index({ feed: 1 },{background: true})
+    index({ sensor: 1 },{background: true})
 end

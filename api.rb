@@ -48,18 +48,18 @@ class OpenSensorApi < Sinatra::Base
 	end
 
 
-	get "/feed/:feed_id" do
-		feed=Feed.find params["feed_id"]
-		return feed.to_json
+	get "/sensor/:sensor_id" do
+		sensor=Sensors.find params["sensor_id"]
+		return sensor.to_json
 		#	return params
 	end
 
-	post "/feed/:feed_id" do
-		feed=Feed.find params["feed_id"]
+	post "/sensor/:sensor_id" do
+		sensor=Sensors.find params["sensor_id"]
 		puts params
 		newMeasure=JSON.parse request.body.read
 		measure=Measure.new(newMeasure)
-		measure.feed=feed
+		measure.sensor=sensor
 		measure.save
 		{:code=>1}.to_json
 	end
@@ -67,7 +67,7 @@ class OpenSensorApi < Sinatra::Base
 	get "/device/:device_id" do
 		device=Device.find params["device_id"]
 		res=device.as_json
-		res[:feeds]=device.feeds.as_json
+		res[:sensors]=device.sensors.as_json
 		res.to_json
 	end
 
@@ -76,48 +76,51 @@ class OpenSensorApi < Sinatra::Base
 	post "/device/:device_id" do
 		errors=[]
 		device=Device.find params["device_id"]
-		feeds=[]
+		sensors=[]
 		newMeasure=JSON.parse request.body.read
-		newMeasure.each do |feed_data|
+		newMeasure.each do |sensor_data|
 			begin
-				if feed_data['feed_id']
-					feed=Feed.find(feed_data["feed_id"])
+				if sensor_data['sensor_id']
+					sensor=Sensor.find(sensor_data["sensor_id"])
 				else
-					feed=Feed.where(:name=>feed_data["name"]).first
-					if feed==nil
-						puts "Creating feed:#{feed_data['name']}"
-						feed=Feed.new(:name=>feed_data["name"])
-						feed.device=device
-						feed.save
+					sensor=Sensor.where(:name=>sensor_data["name"]).first
+					if sensor==nil
+						puts "Creating sensor:#{sensor_data['name']}"
+						sensor=Sensor.new(:name=>sensor_data["name"])
+						sensor.device=device
+						sensor.save
 					else
-						puts "Feed found"
+						puts "sensor found"
 					end
 				end
 			rescue Exception =>e
 				puts e
-				feed=nil
+				sensor=nil
 				errors<<e.to_s
 			end
-			if feed
-				measure=Measure.new(:value=>feed_data["value"].to_f)
-				if feed_data["timestamp"] then measure.timeStamp=Time.at feed_data["timestamp"] end
-				measure.feed=feed
+			if sensor
+				measure=Measure.new(:value=>sensor_data["value"].to_f)
+				if sensor_data["timestamp"] then measure.timeStamp=Time.at sensor_data["timestamp"] end
+				measure.sensor=sensor
 				measure.save
-				feeds<<feed
+				sensors<<sensor
 			end
 		end
 		res={}
 		@current_user.dashboards.each do |dashboard|
 			widgets=[]
 			dashboard.widgets.each do |widget|
-				if feeds.include? widget.feed
-					widgets<<{:_id=>widget.id,:data=>widget.feed.last_measure.as_json}
+				if sensors.include? widget.sensor
+					widgets<<{:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
 				end
 			end
 			publish_on dashboard,widgets unless widgets.size==0
 
 		end
-		if errors.size>0 then res[:errors]=errors.join(',') end
+		if errors.size>0 then res[:errors]=errors.join(',') 
+		else
+			res[:msg]="Updated #{sensors.count}"
+		end
 		res.to_json
 	end
 

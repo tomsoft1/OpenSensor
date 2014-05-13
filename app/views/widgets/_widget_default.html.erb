@@ -8,4 +8,8 @@
 	tmp_<%= widget.id -%>=tmp;
 }
 </script>
-<H4><span id="measure_<%= widget.id -%>"><%= last_measure widget %></span></H4>
+<center>
+	<%= widget.sensor.name %>
+<H2><span id="measure_<%= widget.id -%>"><%= widget.sensor.last_measure.value %><%= widget.sensor.unit %></span></H2>
+<%= "Updated: #{widget.sensor.last_measure.timeStamp}" %>
+</center>

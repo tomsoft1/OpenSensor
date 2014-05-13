@@ -1,6 +1,6 @@
 
 <% widget=locals[:widget] %>
-<% if widget.feed %>
+<% if widget.sensor %>
 <div id="container_<%= widget.id -%>" style="min-width: 130px; height: 140px; margin: 0 auto">
 
 <script>
@@ -15,7 +15,7 @@ $(function () {
             },
             yAxis: {
                 title: {
-                    text: '<%= widget.feed.name -%>'
+                    text: '<%= widget.sensor.name -%>'
                 },
                 plotLines: [{
                     value: 0,
@@ -26,16 +26,16 @@ $(function () {
             tooltip: {
                 valueSuffix: '°C'
             },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            },
+//            legend: {
+ //               layout: 'vertical',
+ //               align: 'right',
+ //               verticalAlign: 'middle',
+ //               borderWidth: 0
+ //           },
             series: [{
                 id:1,
-                name: '<%= widget.feed.name -%>',
-                data: [<%= widget.feed.measures[-10..-1].map{|v| v.value}.join(',') -%>]
+                name: '<%= widget.sensor.name -%>',
+                data: [<%= widget.sensor.measures[-[15,widget.sensor.measures.size].min..0].map{|v| v.value}.join(',') -%>]
             }]
         };
 //    tmp.chart=$('#container_<%= widget.id -%>').highcharts(tmp.options);
@@ -52,5 +52,5 @@ $(function () {
 
  </script>
  <% else %>
- Widget not linked to a feed 
+ Widget not linked to a sensor 
  <% end %>

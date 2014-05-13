@@ -11,13 +11,13 @@
   <%= @device.description %>
 </p>
 <p>
-	<b>Feeds:</b><br>
-	<% @device.feeds.each do |feed|%>
-<h5><%= link_to feed.name,feed_path(feed) %><%= "(#{feed.measures.count} measures)" %></h5>
+	<b>Sensors:</b><br>
+	<% @device.sensors.each do |sensor|%>
+<h5><%= link_to sensor.name,sensor_path(sensor) %><%= "(#{sensor.measures.count} measures)" %></h5>
 	<% end %>
 </p>
 <br>
-<%= link_to "New feed","/feeds/new?device=#{@device.id}",:class=>"btn btn-primary btn-" %>
+<%= link_to "New sensor","/sensors/new?device=#{@device.id}",:class=>"btn btn-primary btn-" %>
 <br>
 <br>
 

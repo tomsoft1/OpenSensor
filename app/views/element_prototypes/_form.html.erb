@@ -1,0 +1,21 @@
+<%= form_for(@element_prototype) do |f| %>
+  <% if @element_prototype.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@element_prototype.errors.count, "error") %> prohibited this element_prototype from being saved:</h2>
+
+      <ul>
+      <% @element_prototype.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

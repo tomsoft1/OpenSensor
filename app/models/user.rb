@@ -50,7 +50,7 @@ class User
   validates_presence_of :name
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :created_at, :updated_at
   has_many :devices
-  has_many :feeds
+  has_many :sensors
   has_many :dashboards
   field  :api_key, :type=>String
   def getApiKey

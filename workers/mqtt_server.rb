@@ -29,20 +29,20 @@ MQTT::Client.connect('localhost') do |c|
 
 			d=Device.find split[1]
 			puts d.name
-			feed=Feed.where(:device=>d,:name=>split[3]).first
-			if feed
-				puts "Feed found"
+			sensor=Sensor.where(:device=>d,:name=>split[3]).first
+			if sensor
+				puts "Sensor found"
 			else
-				puts "feed notfound #{split[3]}"
+				puts "Sensor notfound #{split[3]}"
 			end
-			if feed
-				m=feed.add_measure message
+			if sensor
+				m=sensor.add_measure message
 
-				feed.user.dashboards.each do |dashboard|
+				sensor.user.dashboards.each do |dashboard|
 					widgets=[]
 					dashboard.widgets.each do |widget|
-						if widget.feed==feed
-							widgets<<{:_id=>widget.id,:data=>widget.feed.last_measure.as_json}
+						if widget.sensor==sensor
+							widgets<<{:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
 						end
 					end
 					puts "Pbulishing on #{dashboard.id} #{widgets}"
