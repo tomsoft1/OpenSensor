@@ -4,6 +4,7 @@
 	var tmp=Widget.widgets["<%= widget.id %>"];
 	tmp.on_update=function(message){
 		$("#measure_"+this._id).text(message.data.value);
+		$("#timeStamp_"+this._id).text(message.data.timeStamp);
 	}
 	tmp_<%= widget.id -%>=tmp;
 }
@@ -11,5 +12,5 @@
 <center>
 	<%= widget.sensor.name %>
 <H2><span id="measure_<%= widget.id -%>"><%= widget.sensor.last_measure.value %><%= widget.sensor.unit %></span></H2>
-<%= "Updated: #{widget.sensor.last_measure.timeStamp}" %>
+Updated:<span id="<%= "timeStamp_#{widget.id}" -%>" ><%= "#{widget.sensor.last_measure.timeStamp}" %></span>
 </center>

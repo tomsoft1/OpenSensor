@@ -1,9 +1,8 @@
 class Measure
   include Mongoid::Document
-  field :timeStamp, type: Time, default: Time.now
-  field :value ,type:Float
+  field :timeStamp, type: Time
+  field :value ,type:Object
 
   belongs_to :sensor
-
-    index({ sensor: 1 },{background: true})
+  index({ sensor: 1 },{background: true})
 end

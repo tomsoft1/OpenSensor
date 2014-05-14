@@ -51,7 +51,7 @@ $(function () {
 {
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.on_update=function(message){
-        this.chart.series[0].addPoint(message.data.value)
+        this.chart.series[0].addPoint(message.data.value,true,true)
     }
     tmp.on_resize=function(message,widget){
         console.log("one resize");

@@ -28,8 +28,7 @@
 	<i>Sample API Usage with cURL:
 	</i><br/>
 	<pre>
-	curl -i --header "Accept: application/json" --header "Content-Type: application/json" \
-	--header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/sensor/<%= @sensor.id -%>
+curl -i --header "Accept: application/json"  --header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/sensor/<%= @sensor.id -%>
 </pre>
 </p>
 

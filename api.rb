@@ -113,10 +113,15 @@ class OpenSensorApi < Sinatra::Base
 				errors<<e.to_s
 			end
 			if sensor
-				measure=Measure.new(:value=>sensor_data["value"].to_f)
-				if sensor_data["timestamp"] then measure.timeStamp=Time.at sensor_data["timestamp"] end
-				measure.sensor=sensor
-				measure.save
+				if sensor_data["data"]  then sensor_data=sensor_data["data"] else sensor_data=[sensor_data] end
+					puts sensor_data
+				sensor_data.each do |data|
+					puts"data:#{data}"
+					measure=Measure.new(:value=>data["value"],
+							            :timeStamp=>data["time_stamp"]||Time.now )
+					measure.sensor=sensor
+					measure.save
+				end
 				sensors<<sensor
 			end
 		end
