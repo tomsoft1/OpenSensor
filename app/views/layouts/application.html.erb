@@ -33,7 +33,7 @@
     <!-- For all other devices -->
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
-
+<link rel="icon" type="image/png"  href="/favicon.png">
     <%= javascript_include_tag "application" %>
   </head>
   <body>
@@ -46,11 +46,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">OpenSensor</a>
+          <a class="brand" href="#"><%= image_tag "/logo.png",:width=>24 -%> OpenSensor</a>
           <div class="container-fluid nav-collapse">
 
             <ul class="nav navbar-nav">
-              <li><%= link_to "Docs", ""  %></li>
+              <li><%= link_to "API Doc", "https://github.com/tomsoft1/OpenSensor/wiki/API"  %></li>
               <% if isUserAdmin? %>
               <li><%= link_to "Users", users_path  %></li>
               <li><%= link_to "Devices", devices_path  %></li>
@@ -84,10 +84,11 @@
               <li><%= link_to "User Profile", user_path(@current_user) %></li>
               <li><%= link_to "Devices (#{@current_user.devices.count})", devices_path %></li>
               <li><%= link_to "Sensors (#{@current_user.sensors.count})", sensors_path  %></li>
+              <li><%= link_to "Triggers (#{@current_user.triggers.count})", triggers_path  %></li>
               <li><%= link_to "Dashboard", dashboards_path  %> </li>
-              <ul>
+              <ul style="list-style-type: none;padding:0;margin:0;">
                <% @current_user.dashboards.each do |dashboard| %>
-                 <li><%= link_to "#{dashboard.name}", dashboard_path(dashboard)  %> </li>
+                 <li ><span class="glyphicon icon-th"></span><%= link_to "#{dashboard.name}", dashboard_path(dashboard)  %> </li>
                 <% end %>
               </ul>
 
@@ -104,6 +105,8 @@
 
       <footer>
         <p>&copy; Tomsoft 2014</p>
+        Follow us on Twitter: <a href="https://twitter.com/opensensorcloud" class="twitter-follow-button" data-show-count="false">Follow @opensensorcloud</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </footer>
 
     </div> <!-- /container -->

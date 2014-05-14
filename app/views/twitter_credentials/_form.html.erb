@@ -1,0 +1,17 @@
+<%= form_for(@twitter_credential) do |f| %>
+  <% if @twitter_credential.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@twitter_credential.errors.count, "error") %> prohibited this twitter_credential from being saved:</h2>
+
+      <ul>
+      <% @twitter_credential.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

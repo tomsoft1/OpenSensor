@@ -6,6 +6,7 @@
     <th>Description</th>
     <th>Type</th>
     <th>Unit</th>
+    <th>MEasures</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,10 +14,11 @@
 
 <% @sensors.each do |sensor| %>
   <tr>
-    <td><%= sensor.name %></td>
+    <td><%= link_to sensor.name,sensor %></td>
     <td><%= sensor.description %></td>
     <td><%= sensor.type %></td>
     <td><%= sensor.unit %></td>
+    <td><%= sensor.measures.count %> measures</td>
     <td><%= link_to 'Show', sensor %></td>
     <td><%= link_to 'Edit', edit_sensor_path(sensor) %></td>
     <td><%= link_to 'Destroy', sensor, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -42,3 +42,14 @@ li .header .edit {
 li .header {
 	background: #FEF;
 }
+.widget_selector{
+	background: #EEE;
+}
+.widget_selector div
+{
+	margin: 10px;
+	display: inline-block;
+	width:350px;
+	height:100px;
+	background: #FFF;
+}

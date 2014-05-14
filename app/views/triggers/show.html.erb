@@ -7,19 +7,30 @@
 
 <p>
   <b>Type:</b>
-  <%= @trigger.type %>
+  <%= @trigger.type %> on <%= @trigger.target %> as a direct message?<%= @trigger.is_dm %>
 </p>
 
 <p>
-  <b>Limit:</b>
-  <%= @trigger.limit %>
-</p>
-
 <p>
   <b>Operator:</b>
+  When sensor <%= @trigger.sensor.name %>
   <%= @trigger.operator %>
+  <%= @trigger.limit %>
 </p>
 
 
 <%= link_to 'Edit', edit_trigger_path(@trigger) %> |
 <%= link_to 'Back', triggers_path %>
+<br>
+<hr>
+Last triggers:
+<table class="table">
+	<tr><td>Time Stamp</td><td>Log</td><td>Processed</td><td>Error</td></tr>
+<% @trigger.trigger_events.desc(:time_stamp).each do |evt| %>
+<tr><td><%= evt.time_stamp %></td>
+	<td><%= evt.log %></td>
+	<td><%= evt.processed %></td>
+	<td><span class="<%= if evt.error then "label label-warning" else "label label-success"  end %>" ><%= evt.error %></span></td>
+</tr>
+<% end %>
+</table>

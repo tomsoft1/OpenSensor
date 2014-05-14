@@ -50,7 +50,9 @@ class OpenSensorApi < Sinatra::Base
 
 	get "/sensor/:sensor_id" do
 		sensor=Sensor.find params["sensor_id"]
-		sensor.as_json[:count]=sensor.measures.count
+		res=sensor.as_json
+		res[:measures_count]=sensor.measures.count
+		res.to_json
 	end
 
 	get "/sensor" do
@@ -148,4 +150,4 @@ class OpenSensorApi < Sinatra::Base
 
 end
 
-#OpenSensorApi.run!
+

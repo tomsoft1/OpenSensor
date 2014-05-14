@@ -11,7 +11,7 @@
 
 <% @dashboards.each do |dashboard| %>
   <tr>
-    <td><%= dashboard.name %></td>
+    <td><%= link_to dashboard.name , dashboard %></td>
     <td><%= dashboard.description %></td>
     <td><%= link_to 'Show', dashboard %></td>
     <td><%= link_to 'Edit', edit_dashboard_path(dashboard) %></td>

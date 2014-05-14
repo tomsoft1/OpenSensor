@@ -1,4 +1,12 @@
 OpenSensor::Application.routes.draw do
+  resources :twitter_credentials do
+   collection do
+      get 'connect'
+      get 'callback'
+    end
+  end
+
+
   resources :element_prototypes
 
 

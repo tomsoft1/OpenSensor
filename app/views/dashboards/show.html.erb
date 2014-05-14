@@ -16,6 +16,9 @@ $(function(){ //DOM Ready
     	resize:{enabled: true,  stop: function(e, ui, $widget) {
     		console.log("Resize");
     		console.log($widget);
+    		$.each(Widget.widgets,function(index,widget){
+				if(widget.on_resize)widget.on_resize(widget,$widget);
+			});
         }}
     });
  	Widget.init_all();

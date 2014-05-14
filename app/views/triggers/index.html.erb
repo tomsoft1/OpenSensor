@@ -4,8 +4,9 @@
   <tr>
     <th>Name</th>
     <th>Type</th>
-    <th>Limit</th>
+    <th>sensor</th>
     <th>Operator</th>
+    <th>Limit</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,10 +14,11 @@
 
 <% @triggers.each do |trigger| %>
   <tr>
-    <td><%= trigger.name %></td>
+    <td><%= link_to trigger.name,trigger %></td>
     <td><%= trigger.type %></td>
-    <td><%= trigger.limit %></td>
+    <td><%= trigger.sensor.name %></td>
     <td><%= trigger.operator %></td>
+    <td><%= trigger.limit %></td>
     <td><%= link_to 'Show', trigger %></td>
     <td><%= link_to 'Edit', edit_trigger_path(trigger) %></td>
     <td><%= link_to 'Destroy', trigger, method: :delete, data: { confirm: 'Are you sure?' } %></td>

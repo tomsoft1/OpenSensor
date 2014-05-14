@@ -9,7 +9,10 @@
   <b>Description:</b>
   <%= @sensor.description %>
 </p>
-
+<p>
+  <b>Id:</b>
+  <%= @sensor.id %>
+</p>
 <p>
   <b>Type:</b>
   <%= @sensor.type %>
@@ -19,7 +22,25 @@
   <b>Unit:</b>
   <%= @sensor.unit %>
 </p>
-
+<p>Numbers of measures:<%= @sensor.measures.count %>
+</p>
+	<p>
+	<i>Sample API Usage with cURL:
+	</i><br/>
+	<pre>
+	curl -i --header "Accept: application/json" --header "Content-Type: application/json" \
+	--header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/sensor/<%= @sensor.id -%>
+</pre>
+</p>
 
 <%= link_to 'Edit', edit_sensor_path(@sensor) %> |
 <%= link_to 'Back', sensors_path %>
+<H4>Last Measures:</H4>
+<table class="table" width=200px>
+<% @sensor.measures[-[20,@sensor.measures.count].min..-1].each do |measure| %>
+<tr>
+  <td><%= measure.timeStamp %></td>
+  <td><%= "#{measure.value} #{@sensor.unit}"  %></td>
+</tr>
+<% end %>
+</table>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Screen name:</b>
+  <%= @twitter_credential.screen_name %>
+</p>
+
+<p>
+  <b>Token:</b>
+  <%= @twitter_credential.token_access %>
+</p>
+
+<%= link_to 'Edit', edit_twitter_credential_path(@twitter_credential) %> |
+<%= link_to 'Back', twitter_credentials_path %>

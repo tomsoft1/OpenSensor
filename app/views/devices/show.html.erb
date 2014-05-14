@@ -5,12 +5,21 @@
   <b>Name:</b>
   <%= @device.name %>
 </p>
-
+<p><b>Device Id:</b>
+	<%= @device.id %>
 <p>
   <b>Description:</b>
   <%= @device.description %>
 </p>
 <p>
+	<p>
+	<i>Sample API Usage with cURL:
+	</i><br/>
+	<pre>
+	curl -i --header "Accept: application/json" --header "Content-Type: application/json" \ 
+	--header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/device/<%= @device.id -%>
+</pre>
+</p>
 	<b>Sensors:</b><br>
 	<% @device.sensors.each do |sensor|%>
 <h5><%= link_to sensor.name,sensor_path(sensor) %><%= "(#{sensor.measures.count} measures)" %></h5>

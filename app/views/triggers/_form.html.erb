@@ -17,15 +17,22 @@
   </div>
   <div class="field">
     <%= f.label :type %><br />
-    <%= f.text_field :type %>
+    <%= f.select(:type,options_for_select(["email","twitter"],:selected=>@trigger.type)) %>
+  </div>
+    <div class="field">
+    <%= f.label :target %><br />
+    <%= f.text_field :target %>
+  </div>
+    <div class="field">
+    <%= f.label :is_dm %><br />
+    <%= f.select(:is_dm,options_for_select(["true","false"],:selected=>@trigger.is_dm)) %>
   </div>
   <div class="field">
-    <%= f.label :limit %><br />
+    Condition: <br />
+    <%= f.select(:sensor_id,options_for_select(@current_user.sensors.map{|s|[s.name,s.id]},:selected => @trigger.sensor_id)) %>
+
+    <%= f.select(:operator,options_for_select(Trigger.operators.invert,:selected => @trigger.operator)) %>
     <%= f.text_field :limit %>
-  </div>
-  <div class="field">
-    <%= f.label :operator %><br />
-    <%= f.text_field :operator %>
   </div>
   <div class="actions">
     <%= f.submit %>

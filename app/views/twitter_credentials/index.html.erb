@@ -1,0 +1,25 @@
+<h1>Listing twitter_credentials</h1>
+
+<table>
+  <tr>
+    <th>Screen name</th>
+    <th>Token</th>
+    <th>Token secret</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @twitter_credentials.each do |twitter_credential| %>
+  <tr>
+    <td><%= twitter_credential.screen_name %></td>
+    <td><%= link_to 'Show', twitter_credential %></td>
+    <td><%= link_to 'Edit', edit_twitter_credential_path(twitter_credential) %></td>
+    <td><%= link_to 'Destroy', twitter_credential, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Twitter credential', new_twitter_credential_path %>

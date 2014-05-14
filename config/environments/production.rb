@@ -82,3 +82,5 @@ OpenSensor::Application.configure do
 
 
 end
+API_ENDPOINT="api.opensensorcloud.com"
+

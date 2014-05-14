@@ -1,14 +1,19 @@
 
 <% widget=locals[:widget] %>
 <% if widget.sensor %>
+<div id="parent_<%= widget.id -%>">
 <div id="container_<%= widget.id -%>" style="min-width: 130px; height: 140px; margin: 0 auto">
+</div>
+</div>
 
 <script>
 $(function () {
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.options={
             chart:{
-                renderTo:'container_<%= widget.id -%>'
+                renderTo:'container_<%= widget.id -%>',
+                type:'<%= widget.param_type.downcase -%>'
+
             },
             title:{
                 text:null
@@ -47,6 +52,14 @@ $(function () {
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.on_update=function(message){
         this.chart.series[0].addPoint(message.data.value)
+    }
+    tmp.on_resize=function(message,widget){
+        console.log("one resize");
+        var height=$("#widget_<%= widget.id -%>").height();
+        console.log(height);
+        $("#container_<%= widget.id -%>").height(height-20);
+        this.chart.reflow();
+        console.log(this.chart);
     }
     tmp_<%= widget.id -%>=tmp;
 }

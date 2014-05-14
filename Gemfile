@@ -6,6 +6,9 @@ gem "sinatra"
 gem "sinatra-contrib", require: false
 gem 'pusher'
 gem 'mqtt'
+gem 'mail'
+gem 'twitter'
+gem 'twitter_oauth'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

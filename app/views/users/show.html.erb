@@ -3,10 +3,11 @@
 <p>Email: <%= @user.email if @user.email %></p>
 <p>API_KEY: <%= @user.getApiKey  %></p>
 <%= link_to 'Edit account', edit_user_path,:class=>"btn btn-primary" %>
-<h4>Devices</h4>
-<% @user.devices.each do |device| %>
-<h5><%= link_to device.name,device_path(device) %></h5>	
-<% end%>
-<br/>
+<br>
+<b>From here you can: </b><br/>
+<%= link_to "Read the API docs","https://github.com/tomsoft1/OpenSensor/wiki/API" %> to know how to send information from a device to OpenSensorCloud<br/>
+<% if @user.devices.size==0 %>
+and you can sart by adding a device:<br>
 <%=link_to "add device",new_device_path,:class=>"btn btn-primary" %>
+<% end %>
 <br/>

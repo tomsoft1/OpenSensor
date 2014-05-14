@@ -8,6 +8,7 @@ class Sensor
 
   belongs_to :device
   has_many :measures
+  has_many :triggers
   belongs_to :user
   index({ devices: 1 },{background: true})
 
@@ -19,9 +20,10 @@ class Sensor
   	self.user=in_device.user
   end
 
-  def add_measure value
-  	m=Measure.new(:sensor=>self,:value=>value)
+  def add_measure value,timeStamp=Time.now
+  	m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
   	puts m
   	m.save
+    triggers.each{|t| t.check_trigger}
   end
 end

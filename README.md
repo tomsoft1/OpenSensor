@@ -7,7 +7,8 @@ the prupose of this project is to provides an open source framework for the coll
 
 Provides similar function to others commercial paltforms (Xively, Ubicod, Open.sene, etc...) but with a free implementation
 
-The platform itself is live and running at http://opensensor.myapp.fr
+The platform itself is live and running at http://opensensorcloud.com 
+and the API is detailled here: https://github.com/tomsoft1/OpenSensor/wiki/API
 
 With this you can:
 * manage and collect information from your sensors
@@ -25,7 +26,6 @@ Not yet done:
 * support for MQTT
 * two ways interaction (not only collect but interact)
 * graphical ineraction toolki creation (like NodeRed)
-________________________
 
 License
 

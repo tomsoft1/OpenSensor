@@ -52,6 +52,7 @@ class User
   has_many :devices
   has_many :sensors
   has_many :dashboards
+  has_many :triggers
   field  :api_key, :type=>String
   def getApiKey
     if self[:api_key]==nil

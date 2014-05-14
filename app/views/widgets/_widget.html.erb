@@ -1,4 +1,4 @@
-<li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
+<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" id="<%= "widget_#{widget.id}" -%>">
 <div class="header" style="background:<%= widget.color -%>"></span><%= widget.name %> <span class="edit">
 	<%= link_to raw('<span class="glyphicon icon-pencil">'),edit_widget_path(widget) %> 
 	<%= link_to raw('<span class="glyphicon icon-off">'), widget, method: :delete, data: { confirm: 'Delete Widget: Are you sure?' } %> 

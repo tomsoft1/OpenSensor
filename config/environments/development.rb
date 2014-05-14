@@ -46,3 +46,4 @@ OpenSensor::Application.configure do
   }
 
 end
+API_ENDPOINT="api.local:3000"

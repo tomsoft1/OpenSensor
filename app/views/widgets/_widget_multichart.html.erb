@@ -9,7 +9,8 @@ $(function () {
     tmp.sensor_idx=JSON.parse('<%= raw([widget.sensor.id,widget.sensor2,widget.sensor3].as_json) -%>');
     tmp.options={
             chart:{
-                renderTo:'container_<%= widget.id -%>'
+                renderTo:'container_<%= widget.id -%>',
+                type:'<%= widget.charttype.downcase -%>'
             },
             title:{
                 text:null
@@ -57,6 +58,14 @@ $(function () {
         var idx=this.sensor_idx.indexOf(message.data.sensor_id);
         console.log("Index:"+idx);
         this.chart.series[this.sensor_idx.indexOf(message.data.sensor_id)].addPoint(message.data.value)
+    }
+    tmp.on_resize=function(message,widget){
+        console.log("one resize");
+        var height=$("#widget_<%= widget.id -%>").height();
+        console.log(height);
+        $("#container_<%= widget.id -%>").height(height-20);
+        this.chart.reflow();
+        console.log(this.chart);
     }
     tmp_<%= widget.id -%>=tmp;
 }
