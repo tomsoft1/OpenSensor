@@ -1,5 +1,5 @@
 class DashboardsController < ApplicationController
-  before_filter :authenticate_user!,:except=>[:show]
+  before_filter :authenticate_user!,:except=>[:show,:webhook]
   # GET /dashboards
   # GET /dashboards.json
   def index

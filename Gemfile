@@ -3,7 +3,7 @@ ruby '1.9.3'
 gem 'rails', '3.2.13'
 gem "twitter-bootstrap-rails"
 gem "sinatra"
-gem "sinatra-contrib"
+#gem "sinatra-contrib"
 gem 'pusher'
 gem 'mqtt'
 

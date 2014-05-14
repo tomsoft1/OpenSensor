@@ -12,7 +12,7 @@ class Sensor
   index({ devices: 1 },{background: true})
 
   def last_measure
-  	self.measures.last
+  	self.measures.last||Measure.new(:value=>"N/A")
   end
   def device=in_device
   	self[:device_id]=in_device.id
