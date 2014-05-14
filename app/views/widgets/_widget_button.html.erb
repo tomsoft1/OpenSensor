@@ -1,0 +1,12 @@
+<% widget=locals[:widget] %>
+<script type="text/javascript">
+var onclick_<%= widget.id %>=function(elem){
+	console.log("clicked");
+	var tmp=Widget.widgets["<%= widget.id %>"];
+	console.log(tmp);
+}
+</script>
+<center>
+	<br/>
+<button class="btn btn-primary btn-lg" onClick="onclick_<%= widget.id -%>(this)" ><%= widget.action %></button>
+</center>

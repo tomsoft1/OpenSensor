@@ -1,0 +1,25 @@
+<% widget=locals[:widget] %>
+<script type="text/javascript">
+{
+	var tmp=Widget.widgets["<%= widget.id -%>"];
+	tmp.on_update=function(message){
+		console.log("update trace");
+		$('#<%= widget.id -%> tr:last').after('<tr><td>'+message.data.timeStamp+'</td><td>'+message.data.value+'</td></tr>');
+		
+		while($('#<%= widget.id -%> tr').size()>4){
+			$('#<%= widget.id -%> tr:first').remove();
+		}
+
+	}
+	tmp_<%= widget.id -%>=tmp;
+}
+</script>
+<center>
+	<%= widget.sensor.name %>
+<table class="table" id="<%= widget.id %>">
+<tr>
+	<td><%= widget.sensor.last_measure.timeStamp %></td>
+	<td><%= widget.sensor.last_measure.value %><%= widget.sensor.unit %></td>
+</tr>
+</table>
+</center>

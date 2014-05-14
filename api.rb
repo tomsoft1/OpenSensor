@@ -148,4 +148,4 @@ class OpenSensorApi < Sinatra::Base
 
 end
 
-OpenSensorApi.run!
+#OpenSensorApi.run!

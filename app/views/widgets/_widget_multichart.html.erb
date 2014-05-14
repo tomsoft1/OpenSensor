@@ -1,0 +1,67 @@
+
+<% widget=locals[:widget] %>
+<% if widget.sensor %>
+<div id="container_<%= widget.id -%>" style="min-width: 130px; height: 140px; margin: 0 auto">
+
+<script>
+$(function () {
+    var tmp=Widget.widgets["<%= widget.id %>"];
+    tmp.sensor_idx=JSON.parse('<%= raw([widget.sensor.id,widget.sensor2,widget.sensor3].as_json) -%>');
+    tmp.options={
+            chart:{
+                renderTo:'container_<%= widget.id -%>'
+            },
+            title:{
+                text:null
+            },
+            yAxis: {
+                title: {
+                    text: '<%= widget.sensor.name -%>'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            legend: {
+                enabled:false,
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [
+            <% [widget.sensor.id,widget.sensor2,widget.sensor3].each do |sensor_id| %>
+            <% if sensor_id %>
+            <%   sensor=Sensor.find(sensor_id) %>
+              {
+                id:"<%= sensor.id %>",
+                name: '<%= sensor.name -%>',
+                data: [<%= sensor.measures[-[15,sensor.measures.size].min..-1].map{|v| v.value}.join(',') -%>]
+            },
+            <% end %>
+            <% end %>
+            ]
+        };
+//    tmp.chart=$('#container_<%= widget.id -%>').highcharts(tmp.options);
+       tmp.chart=new Highcharts.Chart(tmp.options);
+    });
+    
+{
+    var tmp=Widget.widgets["<%= widget.id %>"];
+    tmp.on_update=function(message){
+        var idx=this.sensor_idx.indexOf(message.data.sensor_id);
+        console.log("Index:"+idx);
+        this.chart.series[this.sensor_idx.indexOf(message.data.sensor_id)].addPoint(message.data.value)
+    }
+    tmp_<%= widget.id -%>=tmp;
+}
+
+ </script>
+ <% else %>
+ Widget not linked to a sensor 
+ <% end %>
