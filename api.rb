@@ -102,6 +102,7 @@ class OpenSensorApi < Sinatra::Base
 						puts "Creating sensor:#{sensor_data['name']}"
 						sensor=Sensor.new(:name=>sensor_data["name"])
 						sensor.device=device
+						sensor.user=device.user
 						sensor.save
 					else
 						puts "sensor found"

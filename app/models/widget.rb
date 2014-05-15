@@ -4,6 +4,10 @@ class Widget
   field :type, type: String
   field :input, type: String
   field :color, type: String, :default=>"#EFE"
+  
+  field   :size_x, type: Integer,:default=>1
+  field  :size_y, type: Integer,:default=>1
+  field :order,  type: Integer
 
   belongs_to :dashboard
   belongs_to :sensor

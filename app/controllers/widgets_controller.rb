@@ -71,7 +71,7 @@ class WidgetsController < ApplicationController
       if @widget.update_attributes(params[:widget])
         redirect_to @widget.dashboard
 #        format.html { redirect_to @widget, notice: 'Widget was successfully updated.' }
-#        format.json { head :no_content }
+       format.json { render json: @widget }
       else
         format.html { render action: "edit" }
         format.json { render json: @widget.errors, status: :unprocessable_entity }

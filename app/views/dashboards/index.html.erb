@@ -4,6 +4,7 @@
   <tr>
     <th>Name</th>
     <th>Description</th>
+    <th>public?</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,6 +14,7 @@
   <tr>
     <td><%= link_to dashboard.name , dashboard %></td>
     <td><%= dashboard.description %></td>
+    <td><%= dashboard.is_public %></td>
     <td><%= link_to 'Show', dashboard %></td>
     <td><%= link_to 'Edit', edit_dashboard_path(dashboard) %></td>
     <td><%= link_to 'Destroy', dashboard, method: :delete, data: { confirm: 'Are you sure?' } %></td>

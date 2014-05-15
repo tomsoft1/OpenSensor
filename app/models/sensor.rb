@@ -28,6 +28,6 @@ class Sensor
   	m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
   	puts m
   	m.save
-    triggers.each{|t| t.check_trigger}
+    triggers.each{|t| t.check_trigger m}
   end
 end

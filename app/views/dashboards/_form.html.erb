@@ -19,6 +19,10 @@
     <%= f.label :description %><br />
     <%= f.text_field :description %>
   </div>
+  <div class="field">
+    <%= f.label :is_public %><br />
+    <%= f.select(:is_public,options_for_select([["true",true],["false",false]],:default=>@dashboard.is_public)) %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

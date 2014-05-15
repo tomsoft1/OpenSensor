@@ -16,6 +16,7 @@ $(function(){ //DOM Ready
     	resize:{enabled: true,  stop: function(e, ui, $widget) {
     		console.log("Resize");
     		console.log($widget);
+    		window.debug=$widget;
     		$.each(Widget.widgets,function(index,widget){
 				if(widget.on_resize)widget.on_resize(widget,$widget);
 			});
@@ -68,10 +69,15 @@ Widget.init_all=function(){
 </script>
  
 <p id="notice"><%= notice %></p>
-
-<h3><%= @dashboard.name %></H3>
-<%= @dashboard.description %>
-
+<div class="row">
+  <div class="span10">
+	<h3><%= @dashboard.name %></H3>
+	<%= @dashboard.description %>
+  </div>
+  <div class="span2">
+	<%= link_to "Add widget",new_widget_path(:dashboard=>@dashboard.id),:class=>"btn btn-primary" %>
+  </div>
+</div>
 <div class="gridster">
     <ul>
     	<%= render @dashboard.widgets %>
@@ -80,7 +86,6 @@ Widget.init_all=function(){
 <br>
 <br/>
 <% if @dashboard.user==@current_user %>
-<%= link_to "Add widget",new_widget_path(:dashboard=>@dashboard.id),:class=>"btn btn-primary" %>
 <%= link_to 'Edit', edit_dashboard_path(@dashboard) %> |
 <%= link_to 'Back', dashboards_path %>
 <% end %>
