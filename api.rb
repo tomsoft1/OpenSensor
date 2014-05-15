@@ -115,10 +115,10 @@ class OpenSensorApi < Sinatra::Base
 			end
 			if sensor
 				if sensor_data["data"]  then sensor_data=sensor_data["data"] else sensor_data=[sensor_data] end
-					puts sensor_data
+				puts sensor_data
 				sensor_data.each do |data|
 					puts"data:#{data}"
-					measure=Sensor.add_measure(:value=>data["value"],data["time_stamp"]||Time.now )
+					measure=Sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
 				end
 				sensors<<sensor
 			end
@@ -134,7 +134,7 @@ class OpenSensorApi < Sinatra::Base
 			publish_on dashboard,widgets unless widgets.size==0
 
 		end
-		if errors.size>0 then res[:errors]=errors.join(',') 
+		if errors.size>0 then res[:errors]=errors.join(',')
 		else
 			res[:msg]="Updated #{sensors.count}"
 		end
