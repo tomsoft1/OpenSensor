@@ -25,9 +25,8 @@ curl -i --header "Accept: application/json" --header "Content-Type: application/
 	<% end %>
 </p>
 <br>
-<%= link_to "New sensor","/sensors/new?device=#{@device.id}",:class=>"btn btn-primary btn-" %>
+<%= link_to "New sensor","/sensors/new?device=#{@device.id}",:class=>"btn btn-primary" %>
+<%= link_to 'Edit device', edit_device_path(@device),:class=>"btn" %> 
 <br>
 <br>
 
-<%= link_to 'Edit', edit_device_path(@device) %> |
-<%= link_to 'Back', devices_path %>

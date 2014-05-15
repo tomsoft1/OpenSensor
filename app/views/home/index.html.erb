@@ -1,4 +1,15 @@
 <h3>Welcome to OpenSensorCloud!</h3>
 
 
-You need to register to continue
+<ul>
+	<li> Connect your device....</li>
+	<li>Collect data</li>
+	<li>Do Action</li>
+</ul>
+
+See it in action:<%= link_to "Sample dashboard", Dashboard.where(:is_public=>true).first %>
+<br/>
+
+
+  <%= link_to 'Login', new_user_session_path,:class=>"btn btn-primary" %>
+  <%= link_to 'Sign up', new_user_registration_path,:class=>"btn" %>

@@ -1,12 +1,13 @@
 <h1>Listing sensors</h1>
 
-<table class="table">
+A sensor is a feed of data provided by a device connected to the internet. Can be forinstance your Ardunio device . You can use the API to connect devices to OpenSensorCloud.
+<table class="table table-hover">
   <tr>
     <th>Name</th>
     <th>Description</th>
     <th>Type</th>
     <th>Unit</th>
-    <th>MEasures</th>
+    <th>Measures</th>
     <th></th>
     <th></th>
     <th></th>
@@ -28,4 +29,4 @@
 
 <br />
 
-<%= link_to 'New Sensor', new_sensor_path %>
+<%= link_to 'New Sensor', new_sensor_path ,:class=>"btn btn-primary"%>

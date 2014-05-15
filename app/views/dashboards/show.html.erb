@@ -75,7 +75,10 @@ Widget.init_all=function(){
 	<%= @dashboard.description %>
   </div>
   <div class="span2">
+<% if @dashboard.user==@current_user %>
 	<%= link_to "Add widget",new_widget_path(:dashboard=>@dashboard.id),:class=>"btn btn-primary" %>
+	<%= link_to raw("<i class='icon-pencil'></i>"), edit_dashboard_path(@dashboard),:class=>"btn" %> 
+<% end %>
   </div>
 </div>
 <div class="gridster">
@@ -85,7 +88,3 @@ Widget.init_all=function(){
 </div>
 <br>
 <br/>
-<% if @dashboard.user==@current_user %>
-<%= link_to 'Edit', edit_dashboard_path(@dashboard) %> |
-<%= link_to 'Back', dashboards_path %>
-<% end %>

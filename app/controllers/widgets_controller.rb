@@ -63,6 +63,7 @@ class WidgetsController < ApplicationController
   def update
     @widget = Widget.find(params[:id])
       if @widget.update_attributes(params[:widget])
+        binding.pry
         @widget.element_prototype=Widget.find_prototype(@widget.type)
         redirect_to @widget.dashboard
       end

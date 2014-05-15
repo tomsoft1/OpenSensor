@@ -5,3 +5,6 @@
   To use Glyphicons sprites instead of Font Awesome, replace with "require twitter-bootstrap-static/sprites"
   =require twitter-bootstrap-static/fontawesome
   */
+a.btn:visited {
+  color: #ccc;
+}

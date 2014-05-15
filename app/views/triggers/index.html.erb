@@ -1,6 +1,10 @@
-<h1>Listing triggers</h1>
+<h1>Your triggers</h1>
 
-<table>
+<div class="row">
+ <div class="span8">
+Triggers are action that are generated when a specific value is reached by a sensor. Triggers include email sending,tweet, or direct message to somebody else.
+
+<table class="table table-hover">
   <tr>
     <th>Name</th>
     <th>Type</th>
@@ -25,7 +29,9 @@
   </tr>
 <% end %>
 </table>
-
+</span>
 <br />
 
-<%= link_to 'New Trigger', new_trigger_path %>
+<%= link_to 'New Trigger', new_trigger_path,:class=>"btn btn-primary" %>
+</div>
+</div>

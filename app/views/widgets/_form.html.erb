@@ -1,4 +1,4 @@
-<%= form_for(@widget) do |f| %>
+<%= form_for(@widget,:role=>"form") do |f| %>
   <% if @widget.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@widget.errors.count, "error") %> prohibited this widget from being saved:</h2>
@@ -36,7 +36,9 @@
     <% when ParameterEnum.to_s %>
     <%=       f.select(param.name_param.to_sym,options_for_select(param.values,:selected => @widget[param.name_param])) %>
     <% when ParameterSensor.to_s %>
-    <%=       f.select(param.name_param.to_sym,options_for_select(@widget.dashboard.user.sensors.map{|s|[s.name,s.id]},:selected => @widget[param.name_param])) %>
+    <% map=@widget.dashboard.user.sensors.map{|s|[s.name,s.id]} 
+       if param.can_be_empty then map=[["NONE",nil]]+ map end %>
+    <%=       f.select(param.name_param.to_sym,options_for_select(map,:selected => @widget[param.name_param])) %>
     <% else %>
     <%=       f.text_field param.name_param.to_sym %>  
     <% end %>

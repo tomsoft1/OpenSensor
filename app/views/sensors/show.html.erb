@@ -32,8 +32,7 @@ curl -i --header "Accept: application/json"  --header "X-ApiKey: <%= @current_us
 </pre>
 </p>
 
-<%= link_to 'Edit', edit_sensor_path(@sensor) %> |
-<%= link_to 'Back', sensors_path %>
+<%= link_to 'Edit', edit_sensor_path(@sensor),:class=>"btn" %>
 <H4>Last Measures:</H4>
 <table class="table" width=200px>
 <% @sensor.measures[-[20,@sensor.measures.count].min..-1].each do |measure| %>

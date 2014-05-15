@@ -47,13 +47,13 @@ $(function () {
             },
             series: [
             <% [widget.sensor.id,widget.sensor2,widget.sensor3].each do |sensor_id| %>
-            <% if sensor_id %>
+            <% if sensor_id && sensor_id!="" %>
             <%   sensor=Sensor.find(sensor_id) %>
               {
                 id:"<%= sensor.id %>",
                 name: '<%= sensor.name -%>',
                 data: [<%= raw(sensor.measures[-[15,sensor.measures.size].min..-1].map{
-                            |v| "[ (new Date('#{v.timeStamp}')).getTime(),#{v.value}]"}.join(',')) -%>]
+                            |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
             },
             <% end %>
             <% end %>

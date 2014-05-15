@@ -53,7 +53,7 @@ $(function () {
                 id:1,
                 name: '<%= widget.sensor.name -%>',
                 data: [<%= raw(widget.sensor.measures[-[15,widget.sensor.measures.size].min..-1].map{
-                            |v| "[ (new Date('#{v.timeStamp}')).getTime(),#{v.value}]"}.join(',')) -%>]
+                            |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
             }]
         };
 //    tmp.chart=$('#container_<%= widget.id -%>').highcharts(tmp.options);

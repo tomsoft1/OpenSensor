@@ -62,13 +62,10 @@ OpenSensor::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
+    address: "localhost",
     port: 587,
     domain: ENV["DOMAIN_NAME"],
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: ENV["GMAIL_USERNAME"],
-    password: ENV["GMAIL_PASSWORD"]
+    enable_starttls_auto: false
   }
 
 
@@ -80,7 +77,10 @@ OpenSensor::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default :charset => "utf-8"
 
-
+  config.middleware.use ExceptionNotifier,
+	:email_prefix => "TVTWEET ERROR",
+	:sender_address => %{"notifier" <error@tvtweet.com>},
+	:exception_recipients => %w{thomas.landspurg@gmail.com}
 end
 API_ENDPOINT="api.opensensorcloud.com"
 

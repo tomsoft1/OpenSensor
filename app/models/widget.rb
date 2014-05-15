@@ -33,7 +33,7 @@ public
   	proto=get_prototype
   	if proto
   		proto.parameter_def.each do |p|
-  			self[p.name_param.to_sym]=""
+  			self[p.name_param.to_sym]="" unless self[p.name_param.to_sym]
   		end
   	end
   end
