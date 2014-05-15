@@ -11,6 +11,6 @@
 </script>
 <center>
 	<%= widget.sensor.name %>
-<H2><span id="measure_<%= widget.id -%>"><%= widget.sensor.last_measure.value %><%= widget.sensor.unit %></span></H2>
+<H2><span id="measure_<%= widget.id -%>"><%= widget.sensor.last_measure.value %></span> <%= widget.sensor.unit %></H2>
 Updated:<span id="<%= "timeStamp_#{widget.id}" -%>" ><%= "#{widget.sensor.last_measure.timeStamp}" %></span>
 </center>

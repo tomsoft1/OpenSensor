@@ -92,7 +92,7 @@ class TriggersController < ApplicationController
             name=name[1..-1]
             trigger.set(:target,name)
           end
-          if TwitterCredential.where(:screen_name=>name).first==nil
+          if TwitterCredential.where(:user=>@current_user,:screen_name=>name).first==nil
             puts "We dont'thave yet credential!"
             session[:trigger]=trigger.id
             redirect_to connect_twitter_credentials_path

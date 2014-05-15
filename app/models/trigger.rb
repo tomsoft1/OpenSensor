@@ -31,7 +31,7 @@ def check_trigger measure
 	puts "Result:#{cond}"
 	if cond
 		evt=TriggerEvent.new(:trigger=>self,:measure=>measure,
-			:log=>"Checking #{val} #{operator} #{limit} Action:#{type} on:#{target}")
+			:log=>"Checking #{val} #{operator} #{limit} Action:#{type} on:#{target}",:timeStamp=>Time.now)
 		trigger_events<<evt
 		self.save
 		process_event evt
@@ -61,7 +61,7 @@ def process_event evt
 		if self.is_dm
 			begin
 				puts "Is dm"
-				cred=TwitterCredential.where(:screen_name=>"opensensorcloud").first
+				cred=TwitterCredential.where(:user=>self.user,:screen_name=>"opensensorcloud").first
 				res=cred.send_dm(self.target,msg)
 				puts res
 				evt.log+=" DM send"
@@ -71,7 +71,7 @@ def process_event evt
 				evt.error=true
 			end
 		else
-			cred=TwitterCredential.where(:screen_name=>target).first
+			cred=TwitterCredential.where(:user=>self.user,:screen_name=>target).first
 			if cred
 				if cred.update msg
 					evt.log+=" Tweet send..."

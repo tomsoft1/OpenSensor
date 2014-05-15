@@ -4,7 +4,8 @@ class TwitterCredential
   field :user_id  , type:String
   field :token_access, type: String
   field :token_secret, type: String
-
+  belongs_to  :user
+  
   def client
   	  Twitter::REST::Client.new do |config|
   		config.consumer_key        =  TWITTER_CONSUMER_KEY

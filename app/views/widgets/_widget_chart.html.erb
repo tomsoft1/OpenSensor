@@ -1,13 +1,14 @@
 
 <% widget=locals[:widget] %>
 <% if widget.sensor %>
-<div id="parent_<%= widget.id -%>">
+<div id="parent_<%= widget.id -%>">    
 <div id="container_<%= widget.id -%>" style="min-width: 130px; height: 140px; margin: 0 auto">
 </div>
 </div>
 
 <script>
 $(function () {
+
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.options={
             chart:{
@@ -17,6 +18,16 @@ $(function () {
             },
             title:{
                 text:null
+            },
+            xAxis:{
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+                title: {
+                    text: 'Date'
+                }
             },
             yAxis: {
                 title: {
@@ -29,7 +40,7 @@ $(function () {
                 }]
             },
             tooltip: {
-                valueSuffix: '°C'
+                valueSuffix: ' <%= widget.sensor.unit -%>'
             },
             legend: {
                 enabled:false,
@@ -41,17 +52,21 @@ $(function () {
             series: [{
                 id:1,
                 name: '<%= widget.sensor.name -%>',
-                data: [<%= widget.sensor.measures[-[15,widget.sensor.measures.size].min..-1].map{|v| v.value}.join(',') -%>]
+                data: [<%= raw(widget.sensor.measures[-[15,widget.sensor.measures.size].min..-1].map{
+                            |v| "[ (new Date('#{v.timeStamp}')).getTime(),#{v.value}]"}.join(',')) -%>]
             }]
         };
 //    tmp.chart=$('#container_<%= widget.id -%>').highcharts(tmp.options);
        tmp.chart=new Highcharts.Chart(tmp.options);
     });
+
     
 {
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.on_update=function(message){
-        this.chart.series[0].addPoint(message.data.value,true,true)
+        var toAdd=[new Date(message.data.timeStamp).getTime(),message.data.value];
+        console.log(toAdd);
+        this.chart.series[0].addPoint(toAdd,true,true)
     }
     tmp.on_resize=function(message,widget){
         console.log("one resize");

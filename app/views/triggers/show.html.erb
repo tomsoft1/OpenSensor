@@ -26,8 +26,8 @@
 Last triggers:
 <table class="table">
 	<tr><td>Time Stamp</td><td>Log</td><td>Processed</td><td>Error</td></tr>
-<% @trigger.trigger_events.desc(:time_stamp).each do |evt| %>
-<tr><td><%= evt.time_stamp %></td>
+<% @trigger.trigger_events.desc(:timeStamp).each do |evt| %>
+<tr><td><%= evt.timeStamp %></td>
 	<td><%= evt.log %></td>
 	<td><%= evt.processed %></td>
 	<td><span class="<%= if evt.error then "label label-warning" else "label label-success"  end %>" ><%= evt.error %></span></td>

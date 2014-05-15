@@ -1,5 +1,5 @@
 class TwitterCredentialsController < ApplicationController
-
+   before_filter :authenticate_user!
 
   def connect
     puts "In connect"
@@ -43,12 +43,12 @@ class TwitterCredentialsController < ApplicationController
         puts "Access token secret:"+access_token.secret
         puts "uid"+access_token.params[:user_id]
         puts "screen name"+access_token.params[:screen_name]
-        cred=TwitterCredential.where(:twitter_id=>access_token.params[:user_id].to_s).first
+        cred=TwitterCredential.where(:user=>@current_user,:twitter_id=>access_token.params[:user_id].to_s).first
         if cred==nil
-          cred=TwitterCredential.where(:screen_name=>access_token.params[:screen_name]).first
+          cred=TwitterCredential.where(:user=>@current_user,:screen_name=>access_token.params[:screen_name]).first
         end
         if cred==nil
-          cred=TwitterCredential.new
+          cred=TwitterCredential.new(:user=>@current_user)
         end
         cred.screen_name=access_token.params[:screen_name]
         cred.token_access=access_token.token

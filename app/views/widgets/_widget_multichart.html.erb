@@ -15,6 +15,16 @@ $(function () {
             title:{
                 text:null
             },
+            xAxis:{
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+                title: {
+                    text: 'Date'
+                }
+            },
             yAxis: {
                 title: {
                     text: '<%= widget.sensor.name -%>'
@@ -42,7 +52,8 @@ $(function () {
               {
                 id:"<%= sensor.id %>",
                 name: '<%= sensor.name -%>',
-                data: [<%= sensor.measures[-[15,sensor.measures.size].min..-1].map{|v| v.value}.join(',') -%>]
+                data: [<%= raw(sensor.measures[-[15,sensor.measures.size].min..-1].map{
+                            |v| "[ (new Date('#{v.timeStamp}')).getTime(),#{v.value}]"}.join(',')) -%>]
             },
             <% end %>
             <% end %>
@@ -57,7 +68,9 @@ $(function () {
     tmp.on_update=function(message){
         var idx=this.sensor_idx.indexOf(message.data.sensor_id);
         console.log("Index:"+idx);
-        this.chart.series[this.sensor_idx.indexOf(message.data.sensor_id)].addPoint(message.data.value)
+        var toAdd=[new Date(message.data.timeStamp).getTime(),message.data.value];
+        console.log(toAdd);
+        this.chart.series[this.sensor_idx.indexOf(message.data.sensor_id)].addPoint(toAdd,true,true)
     }
     tmp.on_resize=function(message,widget){
         console.log("one resize");
