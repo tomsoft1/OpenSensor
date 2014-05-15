@@ -1,5 +1,5 @@
 class TriggersController < ApplicationController
-   before_filter :authenticate_user!
+  before_filter :authenticate_user!
   # GET /triggers
   # GET /triggers.json
   def index
@@ -41,7 +41,7 @@ class TriggersController < ApplicationController
   # POST /triggers
   # POST /triggers.json
   def create
-    @trigger = Trigger.new(params[:trigger])  
+    @trigger = Trigger.new(params[:trigger])
     @trigger.user=@current_user
     respond_to do |format|
       if @trigger.save
@@ -86,19 +86,38 @@ class TriggersController < ApplicationController
   end
 
   def check_creation trigger
-        if trigger.type=="twitter" && !trigger.is_dm
-          name=trigger.target
-          if name[0]=="@"  
-            name=name[1..-1]
-            trigger.set(:target,name)
-          end
-          if TwitterCredential.where(:user=>@current_user,:screen_name=>name).first==nil
-            puts "We dont'thave yet credential!"
-            session[:trigger]=trigger.id
-            redirect_to connect_twitter_credentials_path
+    if trigger.type=="twitter"
+      name=trigger.target
+      if name[0]=="@"
+        name=name[1..-1]
+        trigger.set(:target,name)
+      end
+      if trigger.is_dm
+        cred=TwitterCredential.where(:screen_name=>"opensensorcloud").first
+        begin
+          u=cred.client.user name
+          rel=cred.client.friendship(cred.twitter_id.to_i,u.id)
+          if !rel.source.can_dm?
+            flash[:notice]="The user @#{name} is not following @opensensorcloud, I can not DM to it"
+            redirect_to edit_trigger_path trigger
             return true
           end
+        rescue Twitter::Error::NotFound=>e
+          flash[:notice]="Unkown twitter use...#{name}"
+          redirect_to edit_trigger_path trigger
+          return true
         end
-        return false
+
+
+      else
+        if TwitterCredential.where(:user=>@current_user,:screen_name=>name).first==nil
+          puts "We dont'thave yet credential!"
+          session[:trigger]=trigger.id
+          redirect_to connect_twitter_credentials_path
+          return true
+        end
+      end
+    end
+    return false
   end
 end

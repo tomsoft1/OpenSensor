@@ -50,11 +50,11 @@ class TwitterCredentialsController < ApplicationController
         if cred==nil
           cred=TwitterCredential.new(:user=>@current_user)
         end
+        cred.twitter_id=access_token.params[:user_id]
         cred.screen_name=access_token.params[:screen_name]
         cred.token_access=access_token.token
         cred.token_secret=access_token.secret
         cred.save        
-
         redirect=session[:twitter_referer]
         session[:twitter_referer]=nil
         # If there is a current trigger being creaed

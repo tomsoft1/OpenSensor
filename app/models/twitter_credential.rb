@@ -1,7 +1,7 @@
 class TwitterCredential
   include Mongoid::Document
   field :screen_name, type: String
-  field :user_id  , type:String
+  field :twitter_id  , type:String
   field :token_access, type: String
   field :token_secret, type: String
   belongs_to  :user
