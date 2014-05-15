@@ -41,6 +41,10 @@ end
 def process_event evt
 	target=self.target
 	name=self.sensor.name
+	device_name="unkwown"
+	if self.sensor.device then device_name=self.sensor.device.name end
+		
+	end
 	case type
 	when "email"
 		begin
@@ -57,7 +61,7 @@ def process_event evt
 		end
 	when "twitter"
 		puts "Twitter envoi"
-		msg="ALERT, your #{self.sensor.name} on #{self.sensor.device.name} reached:#{evt.measure.value} (condition #{self.operator}  #{self.limit})"
+		msg="ALERT, your #{name} on #{device_name} reached:#{evt.measure.value} (condition #{self.operator}  #{self.limit})"
 		if self.is_dm
 			begin
 				puts "Is dm"
