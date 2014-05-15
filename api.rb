@@ -118,10 +118,7 @@ class OpenSensorApi < Sinatra::Base
 					puts sensor_data
 				sensor_data.each do |data|
 					puts"data:#{data}"
-					measure=Measure.new(:value=>data["value"],
-							            :timeStamp=>data["time_stamp"]||Time.now )
-					measure.sensor=sensor
-					measure.save
+					measure=Sensor.add_measure(:value=>data["value"],data["time_stamp"]||Time.now )
 				end
 				sensors<<sensor
 			end

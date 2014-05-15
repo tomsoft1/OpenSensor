@@ -29,5 +29,6 @@ class Sensor
   	puts m
   	m.save
     triggers.each{|t| t.check_trigger m}
+    m
   end
 end
