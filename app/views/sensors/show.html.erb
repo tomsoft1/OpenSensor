@@ -84,7 +84,7 @@ render_data=function(data) {
 $(function() {
 
   $.getJSON(
-    '<%= raw("http://#{API_ENDPOINT}  /sensor/#{@sensor.id}/measures?api_key=#{@current_user.api_key}&callback=?") -%>'
+    '<%= raw("http://#{API_ENDPOINT}/sensor/#{@sensor.id}/measures?api_key=#{@current_user.api_key}&callback=?") -%>'
     , render_data);
 
 });
