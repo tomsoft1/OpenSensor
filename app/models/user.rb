@@ -56,12 +56,21 @@ class User
   has_many :twitter_credentials
 
   field  :api_key, :type=>String
+  before_create :init_api_key
+
+  def init_api_key
+    puts "la"
+      self[:api_key]=Digest::MD5.hexdigest(_id.to_s+Time.now.to_s)
+    end
+
   def getApiKey
     if self[:api_key]==nil
-      self[:api_key]=Digest::MD5.hexdigest(_id.to_s+Time.now.to_s)
+      init_api_key
       self.save
     end
     return self[:api_key]
   end
-
+  def measures
+    Measure.where(:sensor.in=>self.sensors.map{|s|s.id})
+  end
 end

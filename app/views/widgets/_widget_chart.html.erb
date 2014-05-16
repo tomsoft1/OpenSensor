@@ -2,7 +2,7 @@
 <% widget=locals[:widget] %>
 <% if widget.sensor %>
 <div id="parent_<%= widget.id -%>">    
-<div id="container_<%= widget.id -%>" style="min-width: 130px; height: 140px; margin: 0 auto">
+<div id="container_<%= widget.id -%>" style="min-width: 130px; height: <%= 140*widget.size_y-20 -%>px; margin: 0 auto">
 </div>
 </div>
 
@@ -16,6 +16,7 @@ $(function () {
                 type:'<%= widget.param_type.downcase -%>'
 
             },
+            credits:{enabled:false},
             title:{
                 text:null
             },

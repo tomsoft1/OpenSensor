@@ -152,6 +152,7 @@
 
           <%= image_tag "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@current_user.email.strip.downcase)}" %>
           <div class="btn-group">
+            <%= link_to raw("<i class='fa fa-tablet'></i>"), @current_user,:class=>"btn btn-xs btn-primary btn-outline dark" %>
             <%= link_to raw("<i class='fa fa-cog'></i>"), edit_user_registration_path,:class=>"btn btn-xs btn-primary btn-outline dark" %>
             <%= link_to raw("<i class='fa fa-power-off'></i>"),  destroy_user_session_path, :method=>'delete',:class=>"btn btn-xs btn-primary btn-outline dark" %>
           </div>

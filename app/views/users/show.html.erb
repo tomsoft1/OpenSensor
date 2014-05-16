@@ -1,7 +1,18 @@
-<h3>User</h3>
-<p>User: <%= @user.name %></p>
-<p>Email: <%= @user.email if @user.email %></p>
-<p>API_KEY: <%= @user.getApiKey  %></p>
+<div class="row">
+<div class="col-md-4">
+	<div class="panel panel-success panel-dark widget-profile">
+    <div class="panel-heading">
+    	<div class="widget-profile-header">
+	     <h4>User</h4>
+    	 <p><%= @user.name %></p>
+    	</div>
+   </div>
+  <p>Email: <%= @user.email if @user.email %></p>
+  <p>API_KEY: <%= @user.getApiKey  %><p>
+  <p>Total number of measures: <%= @user.measures.count %></p>
+</div>
+</div>
+</div>
 <%= link_to 'Edit account', edit_user_path,:class=>"btn btn-primary" %>
 <br>
 <b>From here you can: </b><br/>
@@ -10,4 +21,5 @@
 and you can sart by adding a device:<br>
 <%=link_to "add device",new_device_path,:class=>"btn btn-primary" %>
 <% end %>
+
 <br/>
