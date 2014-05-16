@@ -5,7 +5,7 @@
 // Pusher
 Pusher.log = function(message) {
   if (window.console && window.console.log) {
-            window.console.log(message);
+//            window.console.log(message);
   }
 };
 <% use_presence=false %>
@@ -13,7 +13,6 @@ var prefix="<%= if use_presence then "presence-" else "" end %>";
 var pusher = new Pusher(prefix+'<%= PUSHER_KEY -%>', { authEndpoint: '/dashboard/auth' });
 var channel = pusher.subscribe('<%= "sensor-#{@sensor.id}" -%>');
 channel.bind('update', function(data) {
-  console.log(data);
   updateDatas(data);
 });
 
@@ -54,28 +53,24 @@ curl -i --header "Accept: application/json"  --header "X-ApiKey: <%= @current_us
 <div id="sensor_chart" style="height: 400px; min-width: 310px"></div>
 <script>
 function updateGraph(message){
-  console.log(message);
   var toAdd=[new Date(message.timeStamp).getTime(),message.value];
-  console.log(toAdd);
   chart.series[0].addPoint(toAdd,true,true)
 
 }
 
 render_data=function(data) {
     // Create the chart
-//    console.log(data);
      chart=new Highcharts.StockChart(
      {
       chart:{renderTo:"sensor_chart"},
       rangeSelector : {
         selected : 1,
-       // inputEnabled: $('#sensor_chart').width() > 480
+        inputEnabled: $('#sensor_chart').width() > 480
       },
 
       title : {
         text : '<%= @sensor.name %>'
       },
-//      plotOptions:{line:{color:'#000'},series:{color:'#000'}},
       series : [{
         name : '<%= @sensor.unit -%>',
         data : data,
@@ -89,8 +84,7 @@ render_data=function(data) {
 $(function() {
 
   $.getJSON(
-//    'http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?'
-    '<%= raw("http://api.local:3000/sensor/#{@sensor.id}/measures?api_key=#{@current_user.api_key}&callback=?") -%>'
+    '<%= raw("http://#{API_ENDPOINT}  /sensor/#{@sensor.id}/measures?api_key=#{@current_user.api_key}&callback=?") -%>'
     , render_data);
 
 });
