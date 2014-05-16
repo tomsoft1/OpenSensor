@@ -23,6 +23,9 @@ OpenSensor::Application.routes.draw do
   resources :home
 
   resources :dashboards do
+    member do
+      post 'positions'
+    end
    collection do
       get 'subscribe'
       post 'webhook'

@@ -7,20 +7,44 @@
 <script src="/assets/justgage.1.0.1.min.js"></script>
 <script type="text/javascript">
 var gridster;
+var dashboard_id='<%= @dashboard.id -%>';
 $(function(){ //DOM Ready
  
     gridster=$(".gridster ul").gridster({
         widget_margins: [5, 5],
-        widget_base_dimensions: [130, 140],
+        widget_base_dimensions: [140, 140],
+        draggable:{stop: function(e, ui, $widget) {console.log("end drag");gridster_save(this);}},
     	resize:{enabled: true,  stop: function(e, ui, $widget) {
     		console.log("Resize");
-    		console.log($widget);
-    		window.debug=$widget;
-    		$.each(Widget.widgets,function(index,widget){
-				if(widget.on_resize)widget.on_resize(widget,$widget);
-			});
+	    	$.each(Widget.widgets,function(index,widget){
+    			if(widget.on_resize)widget.on_resize(widget,$widget);
+	    	});
+    		gridster_save(this);
         }}
     });
+//    gridster_elem=gridster.data('gridster');
+
+    gridster_save=function(data){
+
+    	var newPos=data.serialize();
+    	var i=0;
+    	$.each(Widget.widgets,function(index,widget){
+    		newPos[i++].widget_id=index;
+    	});
+    	// Save new positins
+    	console.log(newPos);
+
+    	$.post("/dashboards/"+dashboard_id+"/positions",
+	    	JSON.stringify(newPos),
+    		function(data) {console.log("Pos Saved...");}
+    	);
+
+    }
+    
+    gridster.on_stop_drag=function(event,ui){
+    	console.log("stop drag");
+//    	this.save();
+    }
  	Widget.init_all();
 });
 // Pusher

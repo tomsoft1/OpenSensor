@@ -127,6 +127,22 @@ class DashboardsController < ApplicationController
     end
   end
 
-
+def positions
+  puts "Pos"
+  #  binding.pry
+  data=request.body.read
+  puts ":"+data
+  res=JSON.parse data
+  puts res
+  res.each do | widget_pos|
+    widget=Widget.find widget_pos["widget_id"]
+    widget.size_x=widget_pos["size_x"]
+    widget.size_y=widget_pos["size_y"]
+    widget.col=widget_pos["col"]
+    widget.row=widget_pos["row"]
+    widget.save
+  end
+  render :json=>{:ok=>1}
+end
 
 end

@@ -87,7 +87,7 @@ class WidgetsController < ApplicationController
     @widget.destroy
 
     respond_to do |format|
-      format.html { redirect_to widgets_url }
+      format.html { redirect_to  @widget.dashboard }
       format.json { head :no_content }
     end
   end
