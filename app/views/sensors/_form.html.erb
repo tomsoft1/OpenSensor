@@ -25,7 +25,7 @@
   </div>
     <div class="field">
     <%= f.label :type %><br />
-    <%= f.select(:type,options_for_select(%w(Float Int Binary String),:selected => @sensor.type)) %>
+    <%= f.select(:type,options_for_select(%w(Float Int Boolean String),:selected => @sensor.type)) %>
   </div> 
   <div class="field">
     <%= f.label :unit %><br />

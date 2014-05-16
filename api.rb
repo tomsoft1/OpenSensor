@@ -1,5 +1,6 @@
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'sinatra'
+require "sinatra/jsonp"
 require "sinatra/reloader" #if development?
 require 'mongoid'
 require 'pusher'
@@ -8,6 +9,7 @@ require ::File.dirname(__FILE__) + '/config/environment'
 Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
 
 class OpenSensorApi < Sinatra::Base
+	helpers Sinatra::Jsonp
 
 	configure do
 		Mongoid.load!("config/mongoid.yml")
@@ -40,8 +42,9 @@ class OpenSensorApi < Sinatra::Base
 
 	def authorized?
 		puts request.env
-		if request.env["HTTP_X_APIKEY"]
-			u=User.where(:api_key=>request.env["HTTP_X_APIKEY"]).first
+		api_key=request.env["HTTP_X_APIKEY"]||params["api_key"]
+		if api_key
+			u=User.where(:api_key=>api_key).first
 			@current_user=u
 		end
 		return u!=nil
@@ -71,7 +74,7 @@ class OpenSensorApi < Sinatra::Base
 	get "/sensor/:sensor_id/measures" do
 		sensor=Sensor.find params["sensor_id"]
 		puts sensor
-		sensor.measures.map{|m|[m.timeStamp,m.value]}.to_json
+		jsonp sensor.measures.asc(:timeStamp).map{|m|[m.timeStamp.to_i*1000,m.value]}
 	end
 	get "/devices" do
 		devices=@current_user.devices
@@ -120,6 +123,7 @@ class OpenSensorApi < Sinatra::Base
 					puts"data:#{data}"
 					measure=sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
 				end
+				publish_on_sensor sensor
 				sensors<<sensor
 			end
 		end
@@ -141,6 +145,14 @@ class OpenSensorApi < Sinatra::Base
 		res.to_json
 	end
 
+	def publish_on_sensor sensor
+		if sensor[:active_channel]==true
+			puts "Published:#{sensor.name} #{sensor.last_measure}"
+			Pusher["sensor-#{sensor.id}"].trigger('update', sensor.last_measure.to_simple_json)
+		else
+			puts "Channel:#{sensor.name} inactive"
+		end
+	end
 	def publish_on dashboard,content
 
 		if dashboard.active_channel?

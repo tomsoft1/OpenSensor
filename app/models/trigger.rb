@@ -17,77 +17,85 @@ class Trigger
 	end
 
 	def check_trigger measure
-		val=measure.value
-		puts "Checking #{val} #{operator} #{limit}"
-		cond=false
-		case operator
-		when "gt"
-			if val>limit then cond=true end
-		when "lt"
-			if val<limit then cond=true end
-		when "eq"
-			if val==limit then cond=true end
-		end
-		puts "Result:#{cond}"
-		if cond
-			evt=TriggerEvent.new(:trigger=>self,:measure=>measure,
-			:log=>"Checking #{val} #{operator} #{limit} Action:#{type} on:#{target}",:timeStamp=>Time.now)
-			trigger_events<<evt
-			self.save
-			process_event evt
+		begin
+			val=measure.value
+			puts "Checking #{val} #{operator} #{limit}"
+			cond=false
+			case operator
+			when "gt"
+				if val>limit then cond=true end
+			when "lt"
+				if val<limit then cond=true end
+			when "eq"
+				if val==limit then cond=true end
+			end
+			puts "Result:#{cond}"
+			if cond
+				evt=TriggerEvent.new(:trigger=>self,:measure=>measure,
+				:log=>"Checking #{val} #{operator} #{limit} Action:#{type} on:#{target}",:timeStamp=>Time.now)
+				trigger_events<<evt
+				self.save
+				process_event evt
+			end
+		rescue Exception => e
+			puts "Exception #{e}"
 		end
 	end
 
 	def process_event evt
-		target=self.target
-		name=self.sensor.name
-		device_name="unkwown"
-		if self.sensor.device then device_name=self.sensor.device.name end
+		begin
+			target=self.target
+			name=self.sensor.name
+			device_name="unkwown"
+			if self.sensor.device then device_name=self.sensor.device.name end
 
-		case type
-		when "email"
-			begin
-				puts "Processing email"
-				mail = Mail.deliver do
-					from    'opensensorcloud@gmail.com'
-					cc	  target
-					subject "ALERT: trigger reached on #{name}"
-					body    "The trigger has been activated..."
-				end
-			rescue Exception => e
-				puts e
-				evt.log=evt.log+" #{e}"
-			end
-		when "twitter"
-			puts "Twitter envoi"
-			msg="ALERT, your #{name} on #{device_name} reached:#{evt.measure.value} (condition #{self.operator}  #{self.limit})"
-			if self.is_dm
+			case type
+			when "email"
 				begin
-					puts "Is dm"
-					cred=TwitterCredential.where(:user=>self.user,:screen_name=>"opensensorcloud").first
-					res=cred.send_dm(self.target,msg)
-					puts res
-					evt.log+=" DM send"
-				rescue Exception=> e
-					puts "Error #{e}"
-					evt.log+="\nERROR:#{e}"
-					evt.error=true
-				end
-			else
-				cred=TwitterCredential.where(:user=>self.user,:screen_name=>target).first
-				if cred
-					if cred.update msg
-						evt.log+=" Tweet send..."
+					puts "Processing email"
+					mail = Mail.deliver do
+						from    'opensensorcloud@gmail.com'
+						cc	  target
+						subject "ALERT: trigger reached on #{name}"
+						body    "The trigger has been activated..."
 					end
-
+				rescue Exception => e
+					puts e
+					evt.log=evt.log+" #{e}"
+				end
+			when "twitter"
+				puts "Twitter envoi"
+				msg="ALERT, your #{name} on #{device_name} reached:#{evt.measure.value} (condition #{self.operator}  #{self.limit})"
+				if self.is_dm
+					begin
+						puts "Is dm"
+						cred=TwitterCredential.where(:user=>self.user,:screen_name=>"opensensorcloud").first
+						res=cred.send_dm(self.target,msg)
+						puts res
+						evt.log+=" DM send"
+					rescue Exception=> e
+						puts "Error #{e}"
+						evt.log+="\nERROR:#{e}"
+						evt.error=true
+					end
 				else
-					evt.log+="\nERROR: Cannot find credential for #{target}"
-					evt.error=true
+					cred=TwitterCredential.where(:user=>self.user,:screen_name=>target).first
+					if cred
+						if cred.update msg
+							evt.log+=" Tweet send..."
+						end
+
+					else
+						evt.log+="\nERROR: Cannot find credential for #{target}"
+						evt.error=true
+					end
 				end
 			end
+			evt.processed=true
+			evt.save
+		rescue Exception =>e
+			puts "Exception #{e}"
 		end
-		evt.processed=true
-		evt.save
 	end
 
 end

@@ -105,16 +105,17 @@ class DashboardsController < ApplicationController
     begin
       if res.valid?
         res.events.each do |event|
+          elems=event['channel'].split('-')
+          active=false
           case event["name"]
           when 'channel_occupied'
-            dashboard_id=event['channel'].split('-').last
-            db=Dashboard.find dashboard_id
-            db.set(:active_channel,true)
+            active=true
           when 'channel_vacated'
-            dashboard_id=event['channel'].split('-').last
-            db=Dashboard.find dashboard_id
-            db.set(:active_channel,false)
+            active=false
           end
+          dbclass=Object.const_get elems[0].capitalize
+          db=dbclass.find elems[1]
+          db.set(:active_channel,active)
         end
         render text: 'ok'
       else

@@ -4,6 +4,7 @@ gem 'rails', '3.2.13'
 gem "twitter-bootstrap-rails"
 gem "sinatra"
 gem "sinatra-contrib", require: false
+gem 'sinatra-jsonp'
 gem 'pusher'
 gem 'mqtt'
 gem 'mail'

@@ -36,19 +36,35 @@
 <link rel="icon" type="image/png"  href="/favicon.png">
     <%= javascript_include_tag "application" %>
   </head>
-  <body>
+  <body class="theme-default main-menu-animated">
+<script>var init = [];</script>
 
-    <div class="navbar navbar-fluid-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#"><%= image_tag "/logo.png",:width=>24 -%> OpenSensor</a>
-          <div class="container-fluid nav-collapse">
+    <div id="main-wrapper">
+<!-- 2. $MAIN_NAVIGATION ===========================================================================
 
+  Main navigation
+-->
+  <div id="main-navbar" class="navbar navbar-inverse" role="navigation">
+    <!-- Main menu toggle -->
+    <button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+    
+    <div class="navbar-inner">
+      <!-- Main navbar header -->
+      <div class="navbar-header">
+
+        <!-- Logo -->
+        <a href="/" class="navbar-brand">
+          <div><%= image_tag "/logoWhite.png",:width=>24 -%> </div>
+          OpenSensorCloud
+        </a>
+
+        <!-- Main navbar toggle -->
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>
+
+      </div> <!-- / .navbar-header -->
+
+      <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
+        <div>
             <ul class="nav navbar-nav">
               <li><%= link_to "API Doc", "https://github.com/tomsoft1/OpenSensor/wiki/API"  %></li>
               <% if isUserAdmin? %>
@@ -57,51 +73,155 @@
               <li><%= link_to "Sensors", sensors_path  %></li>
               <li><%= link_to "Mesures", measures_path  %></li>
               <% end %>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <%= image_tag "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@current_user.email.strip.downcase)}",:width=>24 unless !@current_user %>
-                  User <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <%= render "layouts/navigation_links" %>
-                </ul>
-              </li>
-            </ul>
+          </ul> <!-- / .navbar-nav -->
 
-          </div><!--/.nav-collapse -->
+          <div class="right clearfix">
+            <ul class="nav navbar-nav pull-right right-navbar-nav">
+
+<!-- 3. $NAVBAR_ICON_BUTTONS =======================================================================
+
+              Navbar Icon Buttons
+
+              NOTE: .nav-icon-btn triggers a dropdown menu on desktop screens only. On small screens .nav-icon-btn acts like a hyperlink.
+
+              Classes:
+              * 'nav-icon-btn-info'
+              * 'nav-icon-btn-success'
+              * 'nav-icon-btn-warning'
+              * 'nav-icon-btn-danger' 
+-->
+
+<!-- /3. $END_NAVBAR_ICON_BUTTONS -->
+
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
+                   <%= image_tag "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@current_user.email.strip.downcase)}",:width=>24 unless !@current_user %>
+                  <span><%= @current_user.name unless !@current_user %></span>
+                </a>
+                <ul class="dropdown-menu">
+<%# add navigation links to this file %>
+<% if user_signed_in? %>
+  <li><%= link_to 'Edit account', edit_user_registration_path %></li>
+  <li><%= link_to 'Logout', destroy_user_session_path, :method=>'delete' %></li>
+<% else %>
+  <li><%= link_to 'Login', new_user_session_path %></li>
+  <li><%= link_to 'Sign up', new_user_registration_path %></li>
+<% end %>                </ul>
+              </li>
+            </ul> <!-- / .navbar-nav -->
+          </div> <!-- / .right -->
+        </div>
+      </div> <!-- / #main-navbar-collapse -->
+    </div> <!-- / .navbar-inner -->
+  </div> <!-- / #main-navbar -->
+<!-- /2. $END_MAIN_NAVIGATION -->
+
+<!-- 4. $MAIN_MENU =================================================================================
+
+    Main menu
+    
+    Notes:
+    * to make the menu item active, add a class 'active' to the <li>
+      example: <li class="active">...</li>
+    * multilevel submenu example:
+      <li class="mm-dropdown">
+        <a href="#"><span class="mm-text">Submenu item text 1</span></a>
+        <ul>
+        <li>...</li>
+        <li class="mm-dropdown">
+          <a href="#"><span class="mm-text">Submenu item text 2</span></a>
+          <ul>
+          <li>...</li>
+          ...
+          </ul>
+        </li>
+        ...
+        </ul>
+      </li>
+-->
+  <div id="main-menu" role="navigation">
+    <div id="main-menu-inner">
+<% if @current_user %>
+      <div class="menu-content top" id="menu-content-demo">
+        <!-- Menu custom content demo
+           CSS:        styles/pixel-admin-less/demo.less or styles/pixel-admin-scss/_demo.scss
+           Javascript: html/assets/demo/demo.js
+         -->
+        <div>
+          <div class="text-bg"> <span class="text-slim"><%= @current_user.name %></span></div>
+
+          <%= image_tag "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@current_user.email.strip.downcase)}" %>
+          <div class="btn-group">
+            <%= link_to raw("<i class='fa fa-cog'></i>"), edit_user_registration_path,:class=>"btn btn-xs btn-primary btn-outline dark" %>
+            <%= link_to raw("<i class='fa fa-power-off'></i>"),  destroy_user_session_path, :method=>'delete',:class=>"btn btn-xs btn-primary btn-outline dark" %>
+          </div>
+          <a href="#" class="close">&times;</a>
         </div>
       </div>
-    </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-<% if @current_user %>
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header"><%= @current_user.name+":" %></li>
-             
-              <li><%= link_to "User Profile", user_path(@current_user) %></li>
-              <li><%= link_to "Devices (#{@current_user.devices.count})", devices_path %></li>
-              <li><%= link_to "Sensors (#{@current_user.sensors.count})", sensors_path  %></li>
-              <li><%= link_to "Triggers (#{@current_user.triggers.count})", triggers_path  %></li>
-              <li><%= link_to "Dashboard", dashboards_path  %> </li>
-              <ul style="list-style-type: none;padding:0;margin:0;">
-               <% @current_user.dashboards.each do |dashboard| %>
-                 <li ><span class="glyphicon icon-th"></span><%= link_to "#{dashboard.name}", dashboard_path(dashboard)  %> </li>
-                <% end %>
-              </ul>
+      <ul class="navigation">
+              <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-sitemap"></i><span class="mm-text"><%= "Devices" %></span><span class="label label-success"><%= @current_user.devices.count %></span></a>
+                <ul>
+                  <li>
+                    <a tabindex="-1" href=<%= devices_path -%> ><span class="mm-text">Manage devices</span></a>
+                  </li>
+                  <% @current_user.devices.each do |device| %>
+                  <li>
+                    <a tabindex="-1" href=<%= device_path device -%> ><span class="mm-text"><%= device.name %></span></a>
+                  </li>
+                  <% end %>
+                </ul>
+              </li>
 
-            </ul>
-          </div><!--/.well -->
-<% end %>
-        </div><!--/span-->
+              <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-flask"></i><span class="mm-text">Sensors</span><span class="badge badge-primary"><%= @current_user.sensors.count %></span></a>
+                <ul>
+                  <li>
+                    <a tabindex="-1" href=<%= sensors_path -%> ><span class="mm-text">Manage sensors</span></a>
+                  </li>
+                  <% @current_user.sensors.each do |sensor| %>
+                  <li>
+                    <a tabindex="-1" href=<%= sensor_path sensor -%> ><span class="mm-text"><%= sensor.name %></span></a>
+                  </li>
+                  <% end %>
+                </ul>
+              </li>
+              <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-bell-o"></i><span class="mm-text">Triggers</span><span class="label label-warning"><%= @current_user.triggers.count %></span></a>
+                <ul>
+                  <li>
+                    <a tabindex="-1" href=<%= triggers_path -%> ><span class="mm-text">Manage Triggers</span></a>
+                  </li>
+                  <% @current_user.triggers.each do |trigger| %>
+                  <li>
+                    <a tabindex="-1" href=<%= trigger_path trigger -%> ><span class="mm-text"><%= trigger.name %></span></a>
+                  </li>
+                  <% end %>
+                </ul>
+              </li>
+              <li class="mm-dropdown">
+                <a href="#"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">Dashboards</span><span ></a>
+                <ul>
+                  <li>
+                    <a tabindex="-1" href=<%= dashboards_path -%> ><span class="mm-text">Manage Dashboards</span></a>
+                  </li>
+                  <% @current_user.dashboards.each do |dashboard| %>
+                  <li>
+                    <a tabindex="-1" href=<%= dashboard_path dashboard -%> ><span class="mm-text"><%= dashboard.name %></span></a>
+                  </li>
+                  <% end %>
+                </ul>
+              </li>
+          </ul>
+        </li>
+      </ul> <!-- / .navigation -->
+      <% end %>
+    </div> <!-- / #main-menu-inner -->
+  </div> <!-- / #main-menu -->
+  <div id="content-wrapper" >
 
-        <div class="span10">
           <%= bootstrap_flash %>
           <%= yield %>
-        </div>
-      </div><!--/row-->
 
       <footer>
         <p>&copy; Tomsoft 2014</p>
@@ -110,8 +230,16 @@
       </footer>
 
     </div> <!-- /container -->
-
+</div>
+</div>
+<div id="main-menu-bg"></div>
   </body>
+  <script type="text/javascript">
+  init.push(function () {
+    // Javascript code here
+  })
+  window.PixelAdmin.start(init);
+</script>
 <% if ENV["RAILS_ENV"]=='production' %>
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">

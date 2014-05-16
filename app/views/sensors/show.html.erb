@@ -1,10 +1,29 @@
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+// Pusher
+Pusher.log = function(message) {
+  if (window.console && window.console.log) {
+            window.console.log(message);
+  }
+};
+<% use_presence=false %>
+var prefix="<%= if use_presence then "presence-" else "" end %>";
+var pusher = new Pusher(prefix+'<%= PUSHER_KEY -%>', { authEndpoint: '/dashboard/auth' });
+var channel = pusher.subscribe('<%= "sensor-#{@sensor.id}" -%>');
+channel.bind('update', function(data) {
+  console.log(data);
+  updateDatas(data);
+});
+
+</script>
 <p id="notice"><%= notice %></p>
 
-<p>
   <b>Name:</b>
   <%= @sensor.name %>
+<%= link_to 'Edit', edit_sensor_path(@sensor),:class=>"btn" %>
 </p>
-
 <p>
   <b>Description:</b>
   <%= @sensor.description %>
@@ -31,11 +50,66 @@
 curl -i --header "Accept: application/json"  --header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/sensor/<%= @sensor.id -%>
 </pre>
 </p>
+<% if !["String","Boolean"].include? @sensor.type %>
+<div id="sensor_chart" style="height: 400px; min-width: 310px"></div>
+<script>
+function updateGraph(message){
+  console.log(message);
+  var toAdd=[new Date(message.timeStamp).getTime(),message.value];
+  console.log(toAdd);
+  chart.series[0].addPoint(toAdd,true,true)
 
-<%= link_to 'Edit', edit_sensor_path(@sensor),:class=>"btn" %>
+}
+
+render_data=function(data) {
+    // Create the chart
+//    console.log(data);
+     chart=new Highcharts.StockChart(
+     {
+      chart:{renderTo:"sensor_chart"},
+      rangeSelector : {
+        selected : 1,
+       // inputEnabled: $('#sensor_chart').width() > 480
+      },
+
+      title : {
+        text : '<%= @sensor.name %>'
+      },
+//      plotOptions:{line:{color:'#000'},series:{color:'#000'}},
+      series : [{
+        name : '<%= @sensor.unit -%>',
+        data : data,
+        tooltip: {
+          valueDecimals: 2
+        }
+      }]},function(){}
+      );
+    };
+
+$(function() {
+
+  $.getJSON(
+//    'http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?'
+    '<%= raw("http://api.local:3000/sensor/#{@sensor.id}/measures?api_key=#{@current_user.api_key}&callback=?") -%>'
+    , render_data);
+
+});
+</script>
+<%else%>
+<script>
+function updateGraph(message){
+  }
+</script>
+<% end %>
+<script>
+function updateDatas(message){
+      $('#last_table tbody').prepend('<tr><td>'+ (new Date(message.timeStamp)).toLocaleString()+'</td><td>'+message.value+'<%= @sensor.unit %></td></tr>');
+      updateGraph(message);
+}
+</script>
 <H4>Last Measures:</H4>
-<table class="table" width=200px>
-<% @sensor.measures[-[20,@sensor.measures.count].min..-1].each do |measure| %>
+<table class="table" id="last_table" width=200px>
+<% @sensor.measures[-[20,@sensor.measures.count].min..-1].reverse.each do |measure| %>
 <tr>
   <td><%= measure.timeStamp %></td>
   <td><%= "#{measure.value} #{@sensor.unit}"  %></td>
