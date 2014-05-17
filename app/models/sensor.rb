@@ -14,6 +14,19 @@ class Sensor
 
   index({ devices: 1 },{background: true})
 
+  def Sensor.find_by_name_or_create name
+    sensor=Sensor.where(:name=>name).first
+    if sensor==nil
+      puts "Creating sensor:#{name}"
+      sensor=Sensor.new(:name=>name)
+      sensor.device=device
+      sensor.user=device.user
+      sensor.save
+    else
+      puts "sensor found"
+    end
+  end
+
   def last_measure
   	self.measures.last||Measure.new(:value=>"N/A")
   end

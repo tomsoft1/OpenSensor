@@ -113,6 +113,12 @@ class OpenSensorApi < Sinatra::Base
 			f=File.open("log/areku.log","a+");
 			f.write(params.to_json)
 			f.close
+
+			params.each do |key,value|
+				if key.starts_with?"slot_"
+					sensor=Sensor.find_by_name_or_create sensor_data["name"]
+				end
+			end
 		rescue Excepion => e
 			{:ok =>e.to_s}.to_json
 		end
@@ -130,16 +136,7 @@ class OpenSensorApi < Sinatra::Base
 				if sensor_data['sensor_id']
 					sensor=Sensor.find(sensor_data["sensor_id"])
 				else
-					sensor=Sensor.where(:name=>sensor_data["name"]).first
-					if sensor==nil
-						puts "Creating sensor:#{sensor_data['name']}"
-						sensor=Sensor.new(:name=>sensor_data["name"])
-						sensor.device=device
-						sensor.user=device.user
-						sensor.save
-					else
-						puts "sensor found"
-					end
+					sensor=Sensor.find_by_name_or_create sensor_data["name"]
 				end
 			rescue Exception =>e
 				puts e
