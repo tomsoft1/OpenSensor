@@ -113,12 +113,15 @@ class OpenSensorApi < Sinatra::Base
 			f=File.open("log/areku.log","a+");
 			f.write(params.to_json)
 			f.close
-
+			time=Time.at params["time"]
 			params.each do |key,value|
 				if key.starts_with?"slot_"
-					sensor=Sensor.find_by_name_or_create sensor_data["name"]
+					sensor=Sensor.find_by_name_or_create key
+					measure=sensor.add_measure(value,time )
 				end
 			end
+			measure=Sensor.find_by_name_or_create("signal").add_measure(params["signal"],time )
+			jsonp {:done=>"ok"}
 		rescue Excepion => e
 			{:ok =>e.to_s}.to_json
 		end
