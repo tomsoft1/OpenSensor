@@ -14,7 +14,7 @@ class Sensor
 
   index({ devices: 1 },{background: true})
 
-  def Sensor.find_by_name_or_create name
+  def Sensor.find_by_name_or_create name,device
     sensor=Sensor.where(:name=>name).first
     if sensor==nil
       puts "Creating sensor:#{name}"
@@ -25,6 +25,7 @@ class Sensor
     else
       puts "sensor found"
     end
+    sensor
   end
 
   def last_measure
