@@ -71,10 +71,29 @@ class OpenSensorApi < Sinatra::Base
 		{:code=>1}.to_json
 	end
 
+	def conv_time in_time
+		times=in_time.split('_')
+		if time==3
+			return Time.utc(times[2].to_i,times[1].to_i,times[0].to_i)
+		elsif times.size==5
+			return Time.utc(times[2].to_i,times[1].to_i,times[0].to_i,times[3].to_i,times[4].to_i)
+		end
+
+	end
+
 	get "/sensor/:sensor_id/measures" do
-		sensor=Sensor.find params["sensor_id"]
-		puts sensor
-		jsonp sensor.measures.asc(:timeStamp).map{|m|[m.timeStamp.to_i*1000,m.value]}
+		begin
+			sensor=Sensor.find params["sensor_id"]
+			limit=params[:numbers]||100_000
+		    page=params[:page]||0
+		    criteria=sensor.measures.asc(:timeStamp).skip(limit*page).limit(limit)
+		    if(params[:startTime])then criteria=criteria.where(:timeStamp.gte=>conv_time(params[:timeStamp])) end
+		    if(params[:endTime])then criteria=criteria.where(:timeStamp.lt=>conv_time(params[:endTime])) end
+			puts sensor
+			jsonp criteria.map{|m|[m.timeStamp.to_i*1000,m.value]}
+		rescue Exception=>e
+		   {:error=>e.to_s}
+		end
 	end
 	get "/devices" do
 		devices=@current_user.devices
@@ -86,6 +105,17 @@ class OpenSensorApi < Sinatra::Base
 		res=device.as_json
 		res[:sensors]=device.sensors.as_json
 		res.to_json
+	end
+
+	post "/device/:device_id/sigfox" do
+		begin
+			device=Device.find params["device_id"]
+			f=File.open("log/areku.log","a+");
+			f.write(params.to_json)
+			f.close
+		rescue Excepion => e
+			{:ok =>e.to_s}.to_json
+		end
 	end
 
 	#
