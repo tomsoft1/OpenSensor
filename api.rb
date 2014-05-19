@@ -109,27 +109,34 @@ class OpenSensorApi < Sinatra::Base
 
 	post "/device/:device_id/sigfox" do
 		begin
+			sensors=[]
 			device=Device.find params["device_id"]
 			f=File.open("log/areku.log","a+");
 			f.write(params.to_json+"\n")
 			time=Time.now
 			if params["time"] then Time.at params["time"].to_i end
 			if params["slot_lat"] && params["slot_lon"]
-				value={:lat=>params["slot_lat"].to_f,:lon=params["slot_lon"].to_f,:alt=(params["slot_alt"]||"0").to_f}
+				value={:lat=>params["slot_lat"].to_f,:lon=>params["slot_lon"].to_f,:alt=>(params["slot_alt"]||"0").to_f}
 				sensor=Sensor.find_by_name_or_create "pos",device
 				sensor.set(:type,"Map")
 				measure=sensor.add_measure(value,time )
+				sensors<<sensor
+
 			else
 				params.each do |key,value|
 					if key.starts_with?"slot_"
 						sensor=Sensor.find_by_name_or_create key,device
 						measure=sensor.add_measure(value.to_f,time )
 						f.write("Adding: #{measure.to_s}\n")
+						sensors<<sensor
 					end
 				end
 			end
 
-			measure=Sensor.find_by_name_or_create("signal",device).add_measure(params["signal"].to_f,time )
+			sensor=Sensor.find_by_name_or_create("signal",device)
+			sensors<<sensor
+
+			measure=sensor.add_measure(params["signal"].to_f,time )
 			f.write("Adding: #{measure.to_s}\n")
 
 			f.close
@@ -167,11 +174,20 @@ class OpenSensorApi < Sinatra::Base
 					puts"data:#{data}"
 					measure=sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
 				end
-				publish_on_sensor sensor
 				sensors<<sensor
 			end
 		end
 		res={}
+		check_and_update sensors
+		if errors.size>0 then res[:errors]=errors.join(',')
+		else
+			res[:msg]="Updated #{sensors.count}"
+		end
+		res.to_json
+	end
+
+	def check_and_update sensors
+		sensors.each{|s| publish_on_sensor(s)}
 		@current_user.dashboards.each do |dashboard|
 			widgets=[]
 			dashboard.widgets.each do |widget|
@@ -182,13 +198,8 @@ class OpenSensorApi < Sinatra::Base
 			publish_on dashboard,widgets unless widgets.size==0
 
 		end
-		if errors.size>0 then res[:errors]=errors.join(',')
-		else
-			res[:msg]="Updated #{sensors.count}"
-		end
-		res.to_json
-	end
 
+	end
 	def publish_on_sensor sensor
 		if sensor[:active_channel]==true
 			puts "Published:#{sensor.name} #{sensor.last_measure}"
