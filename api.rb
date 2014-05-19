@@ -111,7 +111,7 @@ class OpenSensorApi < Sinatra::Base
 		begin
 			device=Device.find params["device_id"]
 			f=File.open("log/areku.log","a+");
-			f.write(params.to_json)
+			f.write(params.to_json+"\n")
 			f.close
 			time=Time.now
 			if params["time"] then Time.at params["time"] end
@@ -138,7 +138,7 @@ class OpenSensorApi < Sinatra::Base
 		newMeasure.each do |sensor_data|
 			begin
 				if sensor_data['sensor_id']
-					sensor=Sensor.find(sensor_data["sensor_id"])
+					sensor=Sensor.find(sensor_data["sensor_id"],:device=>device)
 				else
 					sensor=Sensor.find_by_name_or_create sensor_data["name"],device
 				end

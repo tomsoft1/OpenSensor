@@ -27,9 +27,9 @@ class DevicesController < ApplicationController
   # GET /devices/new.json
   def new
     @device = Device.new
-
+    if params[:type] then @device.type=params[:type].capitalize end
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { if !params[:type] then render "select_type" else render end}
       format.json { render json: @device }
     end
   end
@@ -42,7 +42,7 @@ class DevicesController < ApplicationController
   # POST /devices
   # POST /devices.json
   def create
-    @device = Device.new(params[:device])
+    @device = Device.create(params[:device])
     @device.user=current_user
 
     respond_to do |format|

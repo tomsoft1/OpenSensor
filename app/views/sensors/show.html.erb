@@ -1,5 +1,8 @@
 <script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLFKOt7Y2ggj_6P_lNH8BOp_WmZ84K1Jc&sensor=SET_TO_TRUE_OR_FALSE" >
+    </script>
 <script type="text/javascript">
 
 // Pusher
@@ -53,7 +56,9 @@ Update data on this feed:
 curl -i --request POST -H 'Content-Type: application/json;'  --data '[{"sensor_id":"<%= @sensor.id -%>","value":20}]' --header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/device/<%= @sensor.device.id -%>
 </pre>
 </p>
-<% if !["String","Boolean"].include? @sensor.type %>
+<div class="row">
+  <div class="col-xs-9">
+<% if !["String","Boolean","Map"].include? @sensor.type %>
 <div id="sensor_chart" style="height: 400px; min-width: 310px"></div>
 <script>
 function updateGraph(message){
@@ -92,7 +97,39 @@ $(function() {
 
 });
 </script>
-<%else%>
+<% elsif @sensor.type=="Map" %>
+    <script type="text/javascript">
+    // When the window has finished loading create our google map below
+   google.maps.event.addDomListener(window, 'load', init_map);
+   var map;
+   function init_map() {
+     var latLon = new google.maps.LatLng(<%= "#{@sensor.last_measure.value['lat']},#{@sensor.last_measure.value['lon']}" -%>);
+
+     var mapOptions = {
+       center: latLon,
+       zoom: 8
+     };
+     var mapElement = document.getElementById('map-canvas');
+     map = new google.maps.Map(mapElement, mapOptions);
+     var marker = new google.maps.Marker({
+       position: latLon,
+       map: map,
+       title:"Updated:<%= @sensor.last_measure.timeStamp -%>"
+     });
+   }
+
+  function updateGraph(message){
+         var marker = new google.maps.Marker({
+       position: new google.maps.LatLng(message.data.lat,message.data.lon),
+       map: map,
+       title:"Updated:"+new Date(message.timeStamp).toLocaleString()
+     });
+  }
+    </script>
+    Map canvas:
+    <div id="map-canvas" style="width:100%;height:400px" ></div>
+
+<% else %>
 <script>
 function updateGraph(message){
   }
@@ -104,6 +141,8 @@ function updateDatas(message){
       updateGraph(message);
 }
 </script>
+</div>
+<div class="col-xs-3">
 <H4>Last Measures:</H4>
 <table class="table" id="last_table" width=200px>
 <% @sensor.measures[-[20,@sensor.measures.count].min..-1].reverse.each do |measure| %>
@@ -113,3 +152,5 @@ function updateDatas(message){
 </tr>
 <% end %>
 </table>
+</div>
+</div>
