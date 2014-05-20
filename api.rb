@@ -108,36 +108,28 @@ class OpenSensorApi < Sinatra::Base
 		res.to_json
 	end
 
-	post "/device/:device_id/sigfox" do
+	post "/device/sigfox" do
+		if params[:device]
+			device=Device.where(:sigfox_device_id=>params[:device]).first
+			if device
+				device.parse_binary_data params
+				{:done=>"ok"}.to_json
+			else
+				halt 302,{:error=>"Device not found"}.to_json
+			end
+		else
+		end
+	end
+
+	post "/device/:device_id/binary" do
 		begin
 			sensors=[]
 			device=Device.find params["device_id"]
-			f=File.open("log/areku.log","a+");
-			f.write(params.to_json+"\n")
-			time=Time.now
-			if params["time"] then Time.at params["time"].to_i end
-			decode=SigfoxTool.convert JSON.parse(device.sigfox.gsub(/\'/,'"')),params["data"]
-			f.write("Converted:#{decode}")
-			decode.each do |key,value|
-				sensor=Sensor.find_by_name_or_create key,device
-				if value.class==Hash && value["lat"]!=nil then sensor.set(:type,"Position") end
-				measure=sensor.add_measure(value,time )
-				f.write("Adding: #{measure.to_s}\n")
-				sensors<<sensor
-			end
-			sensor=Sensor.find_by_name_or_create("signal",device)
-			sensors<<sensor
-
-			measure=sensor.add_measure(params["signal"].to_f,time )
-			f.write("Adding: #{measure.to_s}\n")
-
-			f.close
-			check_and_update sensors
+			device.parse_binary_data params
 			{:done=>"ok"}.to_json
 		rescue Exception => e
-			f.write(e.to_s+"\n")
-			{:ok =>e.to_s}.to_json
-			f.close
+			puts "ERROR:#{e.to_s}"
+			{:error =>e.to_s}.to_json
 		end
 	end
 
@@ -171,7 +163,7 @@ class OpenSensorApi < Sinatra::Base
 			end
 		end
 		res={}
-		check_and_update sensors
+		Sensor.check_and_update sensors
 		if errors.size>0 then res[:errors]=errors.join(',')
 		else
 			res[:msg]="Updated #{sensors.count}"
@@ -179,37 +171,6 @@ class OpenSensorApi < Sinatra::Base
 		res.to_json
 	end
 
-	def check_and_update sensors
-		sensors.each{|s| publish_on_sensor(s)}
-		@current_user.dashboards.each do |dashboard|
-			widgets=[]
-			dashboard.widgets.each do |widget|
-				if sensors.include? widget.sensor
-					widgets<<{:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
-				end
-			end
-			publish_on dashboard,widgets unless widgets.size==0
-
-		end
-
-	end
-	def publish_on_sensor sensor
-		if sensor[:active_channel]==true
-			puts "Published:#{sensor.name} #{sensor.last_measure}"
-			Pusher["sensor-#{sensor.id}"].trigger('update', sensor.last_measure.to_simple_json)
-		else
-			puts "Channel:#{sensor.name} inactive"
-		end
-	end
-	def publish_on dashboard,content
-
-		if dashboard.active_channel?
-			puts "Published:#{dashboard.name} #{content}"
-			Pusher["dashboard-#{dashboard.id}"].trigger('update', content)
-		else
-			puts "Channel:#{dashboard.name} inactive"
-		end
-	end
 
 end
 

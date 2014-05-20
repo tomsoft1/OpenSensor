@@ -27,7 +27,7 @@
    }
 
   tmp.on_update=function(message){
-    puts message;
+    console.log(message);
     var marker = new google.maps.Marker({
 
        position: new google.maps.LatLng(message.data.value.lat,message.data.value.lon),

@@ -12,10 +12,15 @@
   <%= @device.description %>
 </p>
   <% if @device.type=="Akeru" %>
+<p>
+  <b>Sigfox device id:</b>
+  <%= @device.sigfox_device_id %>
+</p>
+<p>
   <b>Sigfox mapping:</b>
   <%= @device.sigfox %>
   <% end %>
-<p>
+</p>
 	<p>
 	<i>Sample API Usage with cURL:
 	</i><br/>
