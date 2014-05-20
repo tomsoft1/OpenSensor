@@ -1,0 +1,46 @@
+
+<% widget=locals[:widget] %>
+<% if widget.sensor && widget.sensor.type=="Position" %>
+<div id="parent_<%= widget.id -%>">    
+<div id="map_<%= widget.id -%>" style="min-width: 130px; height: <%= 140*widget.size_y -%>px; margin: 0 auto">
+</div>
+</div>
+
+<script>
+    // When the window has finished loading create our google map below
+   var tmp=Widget.widgets["<%= widget.id %>"];
+
+   tmp.on_init=function() {
+     var latLon = new google.maps.LatLng(<%= "#{widget.sensor.last_measure.value['lat']},#{widget.sensor.last_measure.value['lon']}" -%>);
+
+     var mapOptions = {
+       center: latLon,
+       zoom: 8
+     };
+     var mapElement = document.getElementById("map_<%= widget.id -%>");
+     this.map = new google.maps.Map(mapElement, mapOptions);
+     var marker = new google.maps.Marker({
+       position: latLon,
+       map: this.map,
+       title:"Updated:<%= widget.sensor.last_measure.timeStamp -%>"
+     });
+   }
+
+  tmp.on_update=function(message){
+    var marker = new google.maps.Marker({
+       position: new google.maps.LatLng(message.value.lat,message.value.lon),
+       map: this.map,
+       title:"Updated:"+new Date(message.timeStamp).toLocaleString()
+     });
+  }
+      tmp.on_resize=function(message,widget){
+        console.log("one resize");
+        var height=$("#widget_<%= widget.id -%>").height();
+        $("#map_<%= widget.id -%>").height(height-20);
+        console.log(height);
+        google.maps.event.trigger(this.map, "resize");
+    }
+ </script>
+ <% else %>
+ Widget not linked to a sensor 
+ <% end %>
