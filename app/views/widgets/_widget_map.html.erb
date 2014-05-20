@@ -27,8 +27,10 @@
    }
 
   tmp.on_update=function(message){
+    puts message;
     var marker = new google.maps.Marker({
-       position: new google.maps.LatLng(message.value.lat,message.value.lon),
+
+       position: new google.maps.LatLng(message.data.value.lat,message.data.value.lon),
        map: this.map,
        title:"Updated:"+new Date(message.timeStamp).toLocaleString()
      });
