@@ -19,6 +19,20 @@
     <%= f.label :description %><br />
     <%= f.text_field :description %>
   </div>
+  <% if @device.type=="Akeru" %>
+  <div class="field">
+      <div style="float:right">
+    Put the definition of the sigfox mapping. See doc for details.
+    Example:
+    
+  </div>
+    <div>
+    <%= f.label "Sigfox mapping" %><br />
+    <%= f.text_area :sigfox ,:size=>'50x5'   %>
+  </div>
+
+</div>
+    <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

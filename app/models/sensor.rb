@@ -27,7 +27,9 @@ class Sensor
     end
     sensor
   end
-
+  def Sensor.sensor_types
+    %w(Float Int Boolean String Position)
+  end
   def last_measure
   	self.measures.last||Measure.new(:value=>"N/A")
   end

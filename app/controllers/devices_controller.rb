@@ -37,6 +37,8 @@ class DevicesController < ApplicationController
   # GET /devices/1/edit
   def edit
     @device = Device.find(params[:id])
+    if @device.type=="Akeru"  && @device[:sigfox]==nil then @device[:sigfox]="" end
+
   end
 
   # POST /devices
@@ -44,7 +46,7 @@ class DevicesController < ApplicationController
   def create
     @device = Device.create(params[:device])
     @device.user=current_user
-
+    if @device.type=="Akeru" then @device[:sigfox]="" end
     respond_to do |format|
       if @device.save
         format.html { redirect_to @device, notice: 'Device was successfully created.' }

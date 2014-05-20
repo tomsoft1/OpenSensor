@@ -4,6 +4,7 @@ require "sinatra/jsonp"
 require "sinatra/reloader" #if development?
 require 'mongoid'
 require 'pusher'
+load "app/lib/sigfox_tools.rb"
 require ::File.dirname(__FILE__) + '/config/environment'
 
 Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
@@ -115,24 +116,15 @@ class OpenSensorApi < Sinatra::Base
 			f.write(params.to_json+"\n")
 			time=Time.now
 			if params["time"] then Time.at params["time"].to_i end
-			if params["slot_lat"] && params["slot_lon"]
-				value={:lat=>params["slot_lat"].to_f,:lon=>params["slot_lon"].to_f,:alt=>(params["slot_alt"]||"0").to_f}
-				sensor=Sensor.find_by_name_or_create "pos",device
-				sensor.set(:type,"Map")
+			decode=SigfoxTool.convert JSON.parse(device.sigfox.gsub(/\'/,'"')),params["data"]
+			f.write("Converted:#{decode}")
+			decode.each do |key,value|
+				sensor=Sensor.find_by_name_or_create key,device
+				if value.class==Hash && value["lat"]!=nil then sensor.set(:type,"Position") end
 				measure=sensor.add_measure(value,time )
+				f.write("Adding: #{measure.to_s}\n")
 				sensors<<sensor
-
-			else
-				params.each do |key,value|
-					if key.starts_with?"slot_"
-						sensor=Sensor.find_by_name_or_create key,device
-						measure=sensor.add_measure(value.to_f,time )
-						f.write("Adding: #{measure.to_s}\n")
-						sensors<<sensor
-					end
-				end
 			end
-
 			sensor=Sensor.find_by_name_or_create("signal",device)
 			sensors<<sensor
 
@@ -140,6 +132,7 @@ class OpenSensorApi < Sinatra::Base
 			f.write("Adding: #{measure.to_s}\n")
 
 			f.close
+			check_and_update sensors
 			{:done=>"ok"}.to_json
 		rescue Exception => e
 			f.write(e.to_s+"\n")

@@ -58,7 +58,7 @@ curl -i --request POST -H 'Content-Type: application/json;'  --data '[{"sensor_i
 </p>
 <div class="row">
   <div class="col-xs-9">
-<% if !["String","Boolean","Map"].include? @sensor.type %>
+<% if !["String","Boolean","Position"].include? @sensor.type %>
 <div id="sensor_chart" style="height: 400px; min-width: 310px"></div>
 <script>
 function updateGraph(message){
@@ -97,7 +97,7 @@ $(function() {
 
 });
 </script>
-<% elsif @sensor.type=="Map" %>
+<% elsif @sensor.type=="Position" %>
     <script type="text/javascript">
     // When the window has finished loading create our google map below
    google.maps.event.addDomListener(window, 'load', init_map);
@@ -120,7 +120,7 @@ $(function() {
 
   function updateGraph(message){
          var marker = new google.maps.Marker({
-       position: new google.maps.LatLng(message.data.lat,message.data.lon),
+       position: new google.maps.LatLng(message.value.lat,message.value.lon),
        map: map,
        title:"Updated:"+new Date(message.timeStamp).toLocaleString()
      });
@@ -145,7 +145,7 @@ function updateDatas(message){
 <div class="col-xs-3">
 <H4>Last Measures:</H4>
 <table class="table" id="last_table" width=200px>
-<% @sensor.measures[-[20,@sensor.measures.count].min..-1].reverse.each do |measure| %>
+<% @sensor.measures.desc(:timeStamp)[-[20,@sensor.measures.count].min..-1].each do |measure| %>
 <tr>
   <td><%= measure.timeStamp %></td>
   <td><%= "#{measure.value} #{@sensor.unit}"  %></td>
