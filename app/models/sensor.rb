@@ -36,7 +36,7 @@ class Sensor
     dashboards={}
     puts "after sensors Size:#{sensors.size}"
     puts "Sensor:#{sensors}"
-    Widget.where(:sensor_id.in=>sensors.distinct(:_id)).each do |widget|
+    Widget.where(:sensor_id.in=>sensors.map{|s| s.id}).each do |widget|
       puts "la"
       puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
       to_send={:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
@@ -49,8 +49,8 @@ class Sensor
     end
     
   end
-  def publish
-    if self[:active_channel]==true
+  def publish(force_publish=false)
+    if self[:active_channel]==true ||force_publish
       puts "Published:#{self.name} #{self.last_measure}"
       Pusher["sensor-#{self.id}"].trigger('update', self.last_measure.to_simple_json)
     else
@@ -71,7 +71,7 @@ class Sensor
 
 
   def last_measure
-  	self.measures.last||Measure.new(:value=>"N/A")
+  	self.measures.desc(:timeStamp).first||Measure.new(:value=>"N/A")
   end
   def device=in_device
   	self[:device_id]=in_device.id

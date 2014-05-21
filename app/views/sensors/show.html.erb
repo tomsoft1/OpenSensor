@@ -107,24 +107,47 @@ $(function() {
 
      var mapOptions = {
        center: latLon,
-       zoom: 8
+       zoom: 11
      };
      var mapElement = document.getElementById('map-canvas');
      map = new google.maps.Map(mapElement, mapOptions);
-     var marker = new google.maps.Marker({
+
+     var previousPath = [
+<% @sensor.measures.desc(:timeStamp)[0..20].each do |measure| %>
+        new google.maps.LatLng(<%= "#{measure.value['lat']},#{measure.value['lon']}" -%>),
+<% end %>
+    ];
+
+     var polyOptions = {
+       path: previousPath,
+       strokeColor: '#3333EE',
+       strokeOpacity: 0.8,
+       //strokeWeight: 3
+     };
+     poly = new google.maps.Polyline(polyOptions);
+     poly.setMap(map);
+
+     marker = new google.maps.Marker({
        position: latLon,
        map: map,
        title:"Updated:<%= @sensor.last_measure.timeStamp -%>"
      });
    }
 
-  function updateGraph(message){
-         var marker = new google.maps.Marker({
-       position: new google.maps.LatLng(message.value.lat,message.value.lon),
+   function updateGraph(message){
+    console.log(message);
+     var latLng=new google.maps.LatLng(message.value.lat,message.value.lon);
+/*     var marker = new google.maps.Marker({
+       position: latLng,
        map: map,
        title:"Updated:"+new Date(message.timeStamp).toLocaleString()
-     });
-  }
+     });*/
+     marker.setPosition(latLng);
+     marker.setTitle("Updated:"+new Date(message.timeStamp).toLocaleString());
+     var path = poly.getPath();
+     path.push(latLng);
+
+   }
     </script>
     Map canvas:
     <div id="map-canvas" style="width:100%;height:400px" ></div>
@@ -145,7 +168,7 @@ function updateDatas(message){
 <div class="col-xs-3">
 <H4>Last Measures:</H4>
 <table class="table" id="last_table" width=200px>
-<% @sensor.measures.desc(:timeStamp)[-[20,@sensor.measures.count].min..-1].each do |measure| %>
+<% @sensor.measures.desc(:timeStamp)[0..20].each do |measure| %>
 <tr>
   <td><%= measure.timeStamp %></td>
   <td><%= "#{measure.value} #{@sensor.unit}"  %></td>

@@ -15,26 +15,45 @@
 
      var mapOptions = {
        center: latLon,
-       zoom: 8
+       zoom: 11
      };
      var mapElement = document.getElementById("map_<%= widget.id -%>");
      this.map = new google.maps.Map(mapElement, mapOptions);
-     var marker = new google.maps.Marker({
+     this.marker = new google.maps.Marker({
        position: latLon,
        map: this.map,
        title:"Updated:<%= widget.sensor.last_measure.timeStamp -%>"
      });
+     var previousPath = [
+<% widget.sensor.measures.desc(:timeStamp)[0..20].each do |measure| %>
+        new google.maps.LatLng(<%= "#{measure.value['lat']},#{measure.value['lon']}" -%>),
+<% end %>
+    ];
+
+     var polyOptions = {
+       path: previousPath,
+       strokeColor: '#3333EE',
+       strokeOpacity: 0.8,
+       //strokeWeight: 3
+     };
+     this.poly = new google.maps.Polyline(polyOptions);
+     this.poly.setMap(this.map);
    }
 
   tmp.on_update=function(message){
     console.log(message);
-    var marker = new google.maps.Marker({
-
-       position: new google.maps.LatLng(message.data.value.lat,message.data.value.lon),
-       map: this.map,
+    var latLng=new google.maps.LatLng(message.value.lat,message.value.lon);
+/*     var marker = new google.maps.Marker({
+       position: latLng,
+       map: map,
        title:"Updated:"+new Date(message.timeStamp).toLocaleString()
-     });
-  }
+     });*/
+     this.marker.setPosition(latLng);
+     this.marker.setTitle("Updated:"+new Date(message.timeStamp).toLocaleString());
+     var path = this.poly.getPath();
+     path.push(latLng);  
+ }
+
       tmp.on_resize=function(message,widget){
         console.log("one resize");
         var height=$("#widget_<%= widget.id -%>").height();
