@@ -25,6 +25,9 @@ channel.bind('update', function(data) {
   <b>Name:</b>
   <%= @sensor.name %>
 <%= link_to 'Edit', edit_sensor_path(@sensor),:class=>"btn" %>
+ <%= link_to 'Remove all datas', drop_sensor_path(@sensor), method: :delete,:class=>"btn", data: { confirm: 'Delete all measures for thissensor?' } %>
+  <%= link_to 'Destroy', @sensor, method: :delete, data: { confirm: 'Are you sure?' },:class=>"btn" %></td>
+
 </p>
 <p>
   <b>Description:</b>

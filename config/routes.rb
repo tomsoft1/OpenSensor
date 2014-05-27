@@ -12,8 +12,11 @@ OpenSensor::Application.routes.draw do
   resources :element_prototypes
 
 
-  resources :sensors
-
+  resources :sensors do
+    member do
+      delete 'drop'
+    end
+  end
 
   resources :triggers
 

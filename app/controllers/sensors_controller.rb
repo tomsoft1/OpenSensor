@@ -21,6 +21,13 @@ class SensorsController < ApplicationController
     end
   end
 
+  def drop
+    @sensor = Sensor.find(params[:id])
+    @sensor.measures.delete_all
+    redirect_to @sensor
+
+  end
+
   # GET /sensors/new
   # GET /sensors/new.json
   def new

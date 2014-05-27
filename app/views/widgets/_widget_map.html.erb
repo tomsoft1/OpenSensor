@@ -25,7 +25,7 @@
        title:"Updated:<%= widget.sensor.last_measure.timeStamp -%>"
      });
      var previousPath = [
-<% widget.sensor.measures.desc(:timeStamp)[0..20].each do |measure| %>
+<% widget.sensor.measures.desc(:timeStamp)[0..100].each do |measure| %>
         new google.maps.LatLng(<%= "#{measure.value['lat']},#{measure.value['lon']}" -%>),
 <% end %>
     ];
