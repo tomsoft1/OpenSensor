@@ -1,15 +1,10 @@
-class Trigger
-	include Mongoid::Document
-	field :name, type: String
-	field :type, type: String
+class Trigger < Action
 	field :target, type:String
 	field :limit, type: Float
 	field :operator, type: String
 	field :target , type: String
 	field :is_dm  , type: Boolean
 	field :is_triggered,type:Boolean,:default=>false
-	belongs_to :sensor
-	belongs_to :user
 	has_many :trigger_events
 
 	index({ sensor: 1 }, {  background: true })

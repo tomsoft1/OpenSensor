@@ -20,7 +20,7 @@ Triggers are action that are generated when a specific value is reached by a sen
   <tr>
     <td><%= link_to trigger.name,trigger %></td>
     <td><%= trigger.type %></td>
-    <td><%= trigger.sensor.name %></td>
+    <td><%= trigger.sensor.name unless !trigger.sensor %></td>
     <td><%= trigger.operator %></td>
     <td><%= trigger.limit %></td>
     <td><%= link_to 'Show', trigger %></td>

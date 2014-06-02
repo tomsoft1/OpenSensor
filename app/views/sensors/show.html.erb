@@ -48,6 +48,7 @@ channel.bind('update', function(data) {
 </p>
 <p>Numbers of measures:<%= @sensor.measures.count %>
 </p>
+    <% if @sensor.device %>
 	<p>
 	<i>Sample API Usage with cURL:
 	</i><br/>
@@ -59,6 +60,7 @@ Update data on this feed:
 curl -i --request POST -H 'Content-Type: application/json;'  --data '[{"sensor_id":"<%= @sensor.id -%>","value":20}]' --header "X-ApiKey: <%= @current_user.getApiKey -%>" http://<%= API_ENDPOINT -%>/device/<%= @sensor.device.id -%>
 </pre>
 </p>
+<% end %>
 <div class="row">
   <div class="col-xs-9">
 <% if !["String","Boolean","Position"].include? @sensor.type %>

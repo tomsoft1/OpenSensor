@@ -52,7 +52,7 @@ $(function () {
               {
                 id:"<%= sensor.id %>",
                 name: '<%= sensor.name -%>',
-                data: [<%= raw(sensor.measures[-[15,sensor.measures.size].min..-1].map{
+                data: [<%= raw(sensor.measures[-[20,sensor.measures.size].min..-1].map{
                             |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
             },
             <% end %>

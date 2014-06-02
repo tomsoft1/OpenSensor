@@ -1,4 +1,7 @@
 OpenSensor::Application.routes.draw do
+  resources :actions
+
+
   get "welcome/index"
 
   resources :twitter_credentials do

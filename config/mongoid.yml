@@ -15,6 +15,11 @@ defaults: &defaults
   options:
 production:
   <<: *defaults
+  sessions:
+    default:
+      database: open_sensor_development
+      hosts:
+        - www.opensensorcloud.com
 development:
   <<: *defaults
 test:

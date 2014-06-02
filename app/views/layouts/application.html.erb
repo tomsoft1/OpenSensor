@@ -167,7 +167,7 @@
                 <a href="#"><i class="menu-icon fa fa-sitemap"></i><span class="mm-text"><%= "Devices" %></span><span class="label label-success"><%= @current_user.devices.count %></span></a>
                 <ul>
                   <li>
-                    <a tabindex="-1" href=<%= devices_path -%> ><span class="mm-text">Manage devices</span></a>
+                    <a tabindex="-1" href=<%= devices_path -%> ><span class="mm-text"><i class='fa fa-cog'></i> Manage devices</span></a>
                   </li>
                   <% @current_user.devices.each do |device| %>
                   <li>
@@ -181,7 +181,7 @@
                 <a href="#"><i class="menu-icon fa fa-flask"></i><span class="mm-text">Sensors</span><span class="badge badge-primary"><%= @current_user.sensors.count %></span></a>
                 <ul>
                   <li>
-                    <a tabindex="-1" href=<%= sensors_path -%> ><span class="mm-text">Manage sensors</span></a>
+                    <a tabindex="-1" href=<%= sensors_path -%> ><i class='fa fa-cog'></i><span class="mm-text"> Manage sensors</span></a>
                   </li>
                   <% @current_user.sensors.each do |sensor| %>
                   <li>
@@ -194,7 +194,7 @@
                 <a href="#"><i class="menu-icon fa fa-bell-o"></i><span class="mm-text">Triggers</span><span class="label label-warning"><%= @current_user.triggers.count %></span></a>
                 <ul>
                   <li>
-                    <a tabindex="-1" href=<%= triggers_path -%> ><span class="mm-text">Manage Triggers</span></a>
+                    <a tabindex="-1" href=<%= triggers_path -%> ><i class='fa fa-cog'></i><span class="mm-text"> Manage Triggers</span></a>
                   </li>
                   <% @current_user.triggers.each do |trigger| %>
                   <li>
@@ -207,7 +207,7 @@
                 <a href="#"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">Dashboards</span><span ></a>
                 <ul>
                   <li>
-                    <a tabindex="-1" href=<%= dashboards_path -%> ><span class="mm-text">Manage Dashboards</span></a>
+                    <a tabindex="-1" href=<%= dashboards_path -%> ><span class="mm-text"><i class='fa fa-cog'></i> Manage Dashboards</span></a>
                   </li>
                   <% @current_user.dashboards.each do |dashboard| %>
                   <li>

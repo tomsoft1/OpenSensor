@@ -5,15 +5,21 @@ class Sensor
   field :description, type: String
   field :type, type: String, :default=>"Float"
   field :unit, type: String, :default=>""
+  field :is_saved, type: Boolean, :default=>true
+
+  # Last value, used manyly when feed is notsaved
+  embeds_one :last_measure
 
   belongs_to :device
-  has_many :measures
+  has_many :measures # only is is_saved==true
+  has_and_belongs_to_many :actions
   has_many :triggers
   belongs_to :user
   before_destroy :delete_measures
 
   index({ devices: 1 },{background: true})
 
+  
   def Sensor.find_by_name_or_create name,device
     sensor=Sensor.where(:name=>name).first
     if sensor==nil
@@ -37,12 +43,10 @@ class Sensor
     puts "after sensors Size:#{sensors.size}"
     puts "Sensor:#{sensors}"
     Widget.where(:sensor_id.in=>sensors.map{|s| s.id}).each do |widget|
-      puts "la"
       puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
       to_send={:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
       dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
     end
-    puts" befr dash"
     puts dashboards
     dashboards.each do |dashboard,widgets|
       publish_on dashboard,widgets 
@@ -81,11 +85,13 @@ class Sensor
     self.measures.delete_all
   end
   def add_measure value,timeStamp=Time.now
-  	m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
-  	puts m
-  	m.save
+    m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
+    puts m
+    if is_saved
+  	   m.save
+    end
     triggers.each{|t| t.check_trigger m}
-    m
+    return m
   end
 
 
