@@ -40,7 +40,7 @@
        if param.can_be_empty then map=[["NONE",nil]]+ map end %>
     <%=       f.select(param.name_param.to_sym,options_for_select(map,:selected => @widget[param.name_param])) %>
     <% else %>
-    <%=       f.text_field param.name_param.to_sym %>  
+    <%=       f.text_field param.name_param.to_sym,:value=>  @widget[param.name_param]||param.default %>  
     <% end %>
   </div>
 

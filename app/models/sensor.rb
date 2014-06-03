@@ -1,3 +1,5 @@
+Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
+
 class Sensor
   include Mongoid::Document
 
@@ -13,7 +15,6 @@ class Sensor
   belongs_to :device
   has_many :measures # only is is_saved==true
   has_and_belongs_to_many :actions
-  has_many :triggers
   belongs_to :user
   before_destroy :delete_measures
 
@@ -37,20 +38,26 @@ class Sensor
     %w(Float Int Boolean String Position)
   end
   def Sensor.check_and_update sensors
+=begin
     puts "in check and pudate"
     sensors.each{|s| s.publish}
     dashboards={}
     puts "after sensors Size:#{sensors.size}"
     puts "Sensor:#{sensors}"
-    Widget.where(:sensor_id.in=>sensors.map{|s| s.id}).each do |widget|
-      puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
-      to_send={:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
-      dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
+    sensors.each do |sensor|
+      sensor.actions.where(:_type=>Widget).each do |widget|
+        puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
+        to_send={:_id=>widget.id,:data=>widget.sensor.last_measure.as_json}
+        dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
+      end
     end
+
     puts dashboards
     dashboards.each do |dashboard,widgets|
       publish_on dashboard,widgets 
     end
+=end
+
     
   end
   def publish(force_publish=false)
@@ -84,13 +91,29 @@ class Sensor
   def delete_measures
     self.measures.delete_all
   end
+  def publish_update m
+    publish
+    dashboards={}
+    self.actions.where(:_type=>Widget).each do |widget|
+        puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
+        to_send={:_id=>widget.id,:data=>m.as_json}
+        dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
+    end
+    dashboards.each do |dashboard,widgets|
+      Sensor.publish_on dashboard,widgets 
+    end
+
+  end
+
   def add_measure value,timeStamp=Time.now
     m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
     puts m
     if is_saved
   	   m.save
     end
-    triggers.each{|t| t.check_trigger m}
+
+    publish_update m
+    actions.each{|t| t.measure_added self,m}
     return m
   end
 

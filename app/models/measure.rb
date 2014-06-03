@@ -7,7 +7,7 @@ class Measure
   index({ sensor: 1 },{background: true})
   index({ sensor:  1,timeStamp: 1 })
 
-   def to_simple_json
+  def to_simple_json
     {:timeStamp=>timeStamp.to_i*1000,:value=>value}
   end
 

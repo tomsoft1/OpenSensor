@@ -73,4 +73,8 @@ class User
   def measures
     Measure.where(:sensor.in=>self.sensors.map{|s|s.id})
   end
+
+  def isAdmin?
+    return name=="tomsoft"
+  end
 end

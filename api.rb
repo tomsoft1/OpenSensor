@@ -7,8 +7,6 @@ require 'pusher'
 load "app/lib/sigfox_tools.rb"
 require ::File.dirname(__FILE__) + '/config/environment'
 
-Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
-
 class OpenSensorApi < Sinatra::Base
 	helpers Sinatra::Jsonp
 
@@ -143,7 +141,7 @@ class OpenSensorApi < Sinatra::Base
 		newMeasure.each do |sensor_data|
 			begin
 				if sensor_data['sensor_id']
-					sensor=Sensor.find(sensor_data["sensor_id"],:device=>device)
+					sensor=Sensor.where(:id=>sensor_data["sensor_id"],:device=>device).first
 				else
 					sensor=Sensor.find_by_name_or_create sensor_data["name"],device
 				end

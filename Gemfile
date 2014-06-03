@@ -32,6 +32,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'thin'
   gem 'pry'
+  gem 'pry-remote'
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-bundler'

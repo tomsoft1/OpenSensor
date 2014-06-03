@@ -30,6 +30,10 @@ class Trigger < Action
 		rm * c # Delta in meters
 	end
 
+	def measure_added sensor,measure
+		check_trigger measure
+	end
+
 	def check_trigger measure
 		begin
 			val=measure.value
@@ -44,7 +48,7 @@ class Trigger < Action
 				if val==limit then cond=true end
 			when "outside"
 				center=JSON.parse limit
-
+				
 				if distance(center,val)>limit then cond=true end
 				puts "Distance:#{distance(center,val)}"
 			end

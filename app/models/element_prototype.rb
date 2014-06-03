@@ -10,6 +10,7 @@ class ParameterDef
     include Mongoid::Document
 	field :name, type:String
 	field :mandatory, type:Boolean,:default=>false
+	field :default  , type:Object 
 	embedded_in :ElementPrototype
 	def name_param	
 		res=name.downcase
@@ -19,6 +20,7 @@ class ParameterDef
 end
 
 class ParameterString < ParameterDef
+	
 end
 
 class ParameterBoolean < ParameterDef

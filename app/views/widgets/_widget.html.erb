@@ -4,11 +4,18 @@
 	<%= link_to raw('<span class="glyphicon glyphicon-off">'), widget, method: :delete, data: { confirm: 'Delete Widget: Are you sure?' } %> 
 </span></div>
 <script type="text/javascript">
-Widget.addWidget("<%= widget.id -%>",{
+{
+var tmpWidget={
+	id:"<%= widget.id -%>",
+	name:"<% widget.name -%>",
+	params:<%= raw widget.params.to_json %>,
 	on_update:function(value){
 		console.log(value);
 	}
-});
+};
+Widget.addWidget(tmpWidget.id,tmpWidget);
+console.log(tmpWidget);
+}
 </script>
 <%= render widget_partial_name(widget),locals: {widget: widget} %>
 </li>

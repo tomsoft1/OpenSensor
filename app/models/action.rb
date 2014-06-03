@@ -17,7 +17,7 @@ class Action
   # Input feeds
   has_and_belongs_to_many :sensors
   # Output feeds
-  has_and_belongs_to_many :output_feed, class_name: "Sensor", inverse_of: nil
+  has_and_belongs_to_many :output_feed, class_name: "Sensor"
 
 
   def self.find_prototype name
@@ -66,29 +66,46 @@ public
   		end
   	end
   end
+
+  # Callback called whena measure is added to a sensor the we follow
+  def measure_added sensor,measure
+  end
+
+  def params
+    proto=get_prototype
+    res={}
+    if proto
+      proto.parameter_def.each do |p|
+        res[p.name_param.to_sym]=self[p.name_param.to_sym];
+      end
+    end
+    res
+  end
+
+  # Hook to pare some of the attributes which are part of the prototype, espcially
+  #  sensors which are treated differentyl
+  def update_attributes params
+    puts params
+    if params[:sensor_id]
+      self.sensor_ids=[params[:sensor_id]]
+      params.delete :sensor_id
+    end
+    if proto=get_prototype
+      proto.parameter_def.each do |proto|
+        if proto.is_a? ParameterSensor
+          puts "Sensor found..."
+          begin
+            self.sensor_ids << params[proto.name_param.to_sym] unless params[proto.name_param.to_sym]==""
+          rescue Exception => e
+            puts e
+          end
+        end
+      end
+      self.save
+    end
+    puts self.sensors
+   binding.remote_pry
+    super params
+  end
 end
 
-
-class ActionPowerDailySum < Action
-
-	def get_output_feed
-		if output_feed.firt
-			puts "Creating feed"
-			feed=Sensor.new(:name=>"#{name}_daily_sum",:type=>"Float",:user=>sensor.user)
-			output_feed<<feed
-			self.save
-			feed.save
-		end
-		output_feed.first
-	end
-
-	def computeDailySum in_date
-		if get_output_feed.measures.where(:timeStamp=>(in_date+1).to_time).count==0
-			sum=(Measure.computeArea sensor.measures,in_date.to_time,in_date.to_time)/1000
-			output_feed.add_measure(sum,(in_date+1).to_time)
-		else
-			puts "Alredady here"
-		end
-	end
-
-end

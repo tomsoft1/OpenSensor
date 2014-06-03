@@ -9,6 +9,8 @@
 </script>
 
 <script type="text/javascript">
+Highcharts.setOptions({ global: {timezoneOffset:(new Date()).getTimezoneOffset() ,useUTC: true}});
+
 var gridster;
 var dashboard_id='<%= @dashboard.id -%>';
 $(function(){ //DOM Ready
@@ -53,7 +55,7 @@ $(function(){ //DOM Ready
 // Pusher
 Pusher.log = function(message) {
 	if (window.console && window.console.log) {
-//		        window.console.log(message);
+		        window.console.log(message);
 	}
 };
 <% use_presence=false %>
@@ -75,8 +77,13 @@ function updateDashboard(message){
 
 function Widget (widget_id,options) {
     this._id = widget_id;
+    console.log(options);
+    var self=this;
     if(options){
-	    this.on_update=options.on_update;
+        $.each(options,function(k,v){
+    	    self[k]=v;
+        })
+        ;
 	}
 }
 Widget.widgets={};

@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    redirect_to user_path current_user     	
+    redirect_to user_path current_user  unless current_user.isAdmin?
+    @users=User.all
   end
 
   def show

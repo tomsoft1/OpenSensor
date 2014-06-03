@@ -54,7 +54,7 @@ $(function () {
                 id:1,
                 name: '<%= widget.sensor.name -%>',
                 marker : {
-                    radius : 2
+                    radius : 1
                 },
                 data: [<%= raw(widget.sensor.measures[-[20,widget.sensor.measures.size].min..-1].map{
                             |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]

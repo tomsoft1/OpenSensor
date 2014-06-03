@@ -8,16 +8,18 @@
 {
 	var tmp=Widget.widgets["<%= widget.id %>"];
 	tmp.on_init=function(){
+    console.log("on init");
+    console.log(this);
 	    this.gauge = new JustGage({
     	id: 'chart_div_<%= widget.id -%>', 
    		 value: <%= widget.sensor.last_measure.value -%>, 
-   		 min: 0,
-   		 max: 100,
+   		 min: parseInt(this.params['min']),
+   		 max: parseInt(this.params['max']),
     	title: "<%=widget.sensor.name %>",
     	label:""
     	});
-    }; 
-  	tmp.on_update=function(message){
+    };
+  tmp.on_update=function(message){
 		this.gauge.refresh(message.data.value);
 	}
 }

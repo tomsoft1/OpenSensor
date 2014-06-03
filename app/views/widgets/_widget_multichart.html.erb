@@ -52,6 +52,9 @@ $(function () {
               {
                 id:"<%= sensor.id %>",
                 name: '<%= sensor.name -%>',
+                marker : {
+                    radius : 1
+                },
                 data: [<%= raw(sensor.measures[-[20,sensor.measures.size].min..-1].map{
                             |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
             },
@@ -66,6 +69,7 @@ $(function () {
 {
     var tmp=Widget.widgets["<%= widget.id %>"];
     tmp.on_update=function(message){
+        console.log("on update: multichart");
         var idx=this.sensor_idx.indexOf(message.data.sensor_id);
         console.log("Index:"+idx);
         var toAdd=[new Date(message.data.timeStamp).getTime(),message.data.value];

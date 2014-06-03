@@ -158,6 +158,9 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry-remote (0.1.8)
+      pry (~> 0.9)
+      slop (~> 3.0)
     pusher (0.12.0)
       httpclient (~> 2.3.0)
       multi_json (~> 1.0)
@@ -307,6 +310,7 @@ DEPENDENCIES
   mongoid-rspec
   mqtt
   pry
+  pry-remote
   pusher
   quiet_assets
   rails (= 3.2.13)
