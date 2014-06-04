@@ -76,11 +76,13 @@ OpenSensor::Application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default :charset => "utf-8"
+  config.middleware.use ExceptionNotification::Rack,
+	  :email => {
+	  :email_prefix => "[OpenSensorCloudNotif] ",
+	  :sender_address => %{"notifier" <notifier@opensensorcloud.com>},
+	  :exception_recipients => %w{thomas.landspurg@gmail.com}
+  }
 
-  config.middleware.use ExceptionNotifier,
-	:email_prefix => "TVTWEET ERROR",
-	:sender_address => %{"notifier" <error@tvtweet.com>},
-	:exception_recipients => %w{thomas.landspurg@gmail.com}
 end
 # pusher settings
 PUSHER_APP=74565

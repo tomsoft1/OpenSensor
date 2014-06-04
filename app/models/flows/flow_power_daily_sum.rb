@@ -1,4 +1,4 @@
-module Flow
+module Flows
 
 class FlowPowerDailySum < Flow
   field :daily_total, type: Float ,:default=>0
