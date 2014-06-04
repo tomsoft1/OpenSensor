@@ -56,7 +56,7 @@ $(function () {
                 marker : {
                     radius : 1
                 },
-                data: [<%= raw(widget.sensor.measures.desc(:timeStamp)[0..100].map{
+                data: [<%= raw(widget.sensor.measures.desc(:timeStamp)[0..100].reverse.map{
                             |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
             }]
         };

@@ -18,12 +18,14 @@ class Element
   has_and_belongs_to_many :sensors
   # Output feeds
   has_and_belongs_to_many :output_feed, class_name: "Sensor"
-
-
+  before_destroy :delete_output_feed
   def self.find_prototype name
   	ElementPrototype.where(:name=>name).first
   end
 
+  def delete_output_feed
+  	output_feed.each{|afeed| afeed.delete} 
+  end
   
 public
 
@@ -86,7 +88,8 @@ public
   #  sensors which are treated differentyl
   def update_attributes params
     puts params
-    
+    binding.pry
+    if !params then return end
     if params[:sensor_id]
       self.sensor_ids=[params[:sensor_id]]
       params.delete :sensor_id

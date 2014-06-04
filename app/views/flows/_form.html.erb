@@ -18,7 +18,7 @@
   </div>
   <div class="field">
     <%= f.label :sensor %><br />
-    <%= f.select(:sensor_id,options_for_select(@current_user.sensors.map{|s|[s.name,s.id]},:selected => @action.sensor_id)) %>
+    <%= f.select(:sensor_id,options_for_select(@current_user.sensors.map{|s|[s.name,s.id]},:selected => @flow.sensor_id)) %>
   </div>
   <div class="actions">
     <%= f.submit %>

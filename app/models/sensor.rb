@@ -13,7 +13,7 @@ class Sensor
 
   belongs_to :device
   has_many :measures # only is is_saved==true
-  has_and_belongs_to_many :actions
+  has_and_belongs_to_many :elements
   belongs_to :user
   before_destroy :delete_measures
 
@@ -94,7 +94,7 @@ class Sensor
   def publish_update m
     publish
     dashboards={}
-    self.actions.where(:_type=>Widget).each do |widget|
+    self.elements.where(:_type=>Widget).each do |widget|
         puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
         to_send={:_id=>widget.id,:data=>m.as_json}
         dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
@@ -113,7 +113,7 @@ class Sensor
     end
 
     publish_update m
-    actions.each{|t| t.measure_added self,m}
+    elements.each{|t| t.measure_added self,m}
     return m
   end
 

@@ -11,7 +11,7 @@
 <% @flows.each do |flow| %>
   <tr>
     <td><%= flow.name %></td>
-    <td><%= link_to 'Show', flow %></td>
+    <td><%= link_to 'Show', flow,:class=>Flow %></td>
     <td><%= link_to 'Edit', edit_flow_path(flow) %></td>
     <td><%= link_to 'Destroy', flow, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>

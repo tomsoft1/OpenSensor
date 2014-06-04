@@ -14,7 +14,7 @@ class FlowsController < ApplicationController
   # GET /flows/1
   # GET /flows/1.json
   def show
-    @flow = Flow.find(params[:id])
+    @flow = Element.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +42,8 @@ class FlowsController < ApplicationController
   # POST /flows
   # POST /flows.json
   def create
-    @flow = Flow.new(params[:flow])
+    @flow = Flow.factory(params[:flow])
+    @flow.user=current_user
     respond_to do |format|
       if @flow.save
         format.html { redirect_to @flow, notice: 'Flow was successfully created.' }
@@ -57,7 +58,7 @@ class FlowsController < ApplicationController
   # PUT /flows/1
   # PUT /flows/1.json
   def update
-    @flow = Flow.find(params[:id])
+    @flow = Element.find(params[:id])
 
     respond_to do |format|
       if @flow.update_attributes(params[:flow])
@@ -73,7 +74,7 @@ class FlowsController < ApplicationController
   # DELETE /flows/1
   # DELETE /flows/1.json
   def destroy
-    @flow = Flow.find(params[:id])
+    @flow = Element.find(params[:id])
     @flow.destroy
 
     respond_to do |format|

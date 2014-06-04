@@ -11,6 +11,7 @@ class ParameterDef
 	field :name, type:String
 	field :mandatory, type:Boolean,:default=>false
 	field :default  , type:Object 
+	field :description, type:String
 	embedded_in :ElementPrototype
 	def name_param	
 		res=name.downcase
