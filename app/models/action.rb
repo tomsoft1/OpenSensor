@@ -104,7 +104,6 @@ public
       self.save
     end
     puts self.sensors
-   binding.remote_pry
     super params
   end
 end

@@ -1,11 +1,11 @@
 class ActionsController < ApplicationController
   # GET /actions
   # GET /actions.json
-  
+
 
   def index
     @actions = Action.all
-
+    raise "not yet ready"
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @actions }

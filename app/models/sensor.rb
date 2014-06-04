@@ -1,4 +1,3 @@
-Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
 
 class Sensor
   include Mongoid::Document
@@ -20,6 +19,7 @@ class Sensor
 
   index({ devices: 1 },{background: true})
 
+  Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
   
   def Sensor.find_by_name_or_create name,device
     sensor=Sensor.where(:name=>name).first

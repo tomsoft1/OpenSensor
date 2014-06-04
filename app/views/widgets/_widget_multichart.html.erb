@@ -55,8 +55,8 @@ $(function () {
                 marker : {
                     radius : 1
                 },
-                data: [<%= raw(sensor.measures[-[20,sensor.measures.size].min..-1].map{
-                            |v| "[ (new Date(#{v.timeStamp.to_i*1000})).getTime(),#{v.value}]"}.join(',')) -%>]
+                data: [<%= raw(sensor.measures.desc(:timeStamp)[0..20].each.map{
+                            |v| "[ new Date(#{v.timeStamp.to_i*1000}),#{v.value}]"}.join(',')) -%>]
             },
             <% end %>
             <% end %>
