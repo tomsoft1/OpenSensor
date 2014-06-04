@@ -48,4 +48,3 @@ class FlowPowerDailySum < Flow
 
 end
 
-end

@@ -88,7 +88,7 @@ public
   #  sensors which are treated differentyl
   def update_attributes params
     puts params
-    binding.pry
+
     if !params then return end
     if params[:sensor_id]
       self.sensor_ids=[params[:sensor_id]]
