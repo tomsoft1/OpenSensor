@@ -1,11 +1,12 @@
 class ActionsController < ApplicationController
+    before_filter :authenticate_user!
   # GET /actions
   # GET /actions.json
 
 
   def index
-    @actions = Action.all
-    raise "not yet ready"
+    @actions = current_user.actions
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @actions }
@@ -46,7 +47,8 @@ class ActionsController < ApplicationController
     puts params[:action]
 #    binding.pry
 #    @action = Kernel.const_get(params[:action][:type]).new(params[:action])
-    @action = Action.new(params[:action])
+    @action = Action.new(:type=>params[:action])
+
 
     respond_to do |format|
       if @action.save

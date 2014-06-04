@@ -1,4 +1,4 @@
-class Widget < Action
+class Widget < Element
   field :color,  type: String, :default=>"#EFE"
   field :input,  type: String
   field :size_x, type: Integer,:default=>2

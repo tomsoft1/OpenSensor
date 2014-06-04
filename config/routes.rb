@@ -1,4 +1,10 @@
 OpenSensor::Application.routes.draw do
+  resources :flows
+
+
+  resources :elements
+
+
   resources :actions
 
 

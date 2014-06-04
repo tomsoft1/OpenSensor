@@ -1,6 +1,6 @@
-module Actions
+module Flow
 
-class ActionPowerDailySum < Action
+class FlowPowerDailySum < Flow
   field :daily_total, type: Float ,:default=>0
   field :last_update, type: Time
 

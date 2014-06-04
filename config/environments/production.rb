@@ -82,5 +82,11 @@ OpenSensor::Application.configure do
 	:sender_address => %{"notifier" <error@tvtweet.com>},
 	:exception_recipients => %w{thomas.landspurg@gmail.com}
 end
+# pusher settings
+PUSHER_APP=74565
+PUSHER_KEY="c8db3d6ee4b5d52602e7"
+PUSHER_SECRET="a53413e78326386c44ea"
+
+
 API_ENDPOINT="api.opensensorcloud.com"
 

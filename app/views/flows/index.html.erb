@@ -1,0 +1,23 @@
+<h1>Listing flows</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @flows.each do |flow| %>
+  <tr>
+    <td><%= flow.name %></td>
+    <td><%= link_to 'Show', flow %></td>
+    <td><%= link_to 'Edit', edit_flow_path(flow) %></td>
+    <td><%= link_to 'Destroy', flow, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Flow', new_flow_path %>

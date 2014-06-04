@@ -1,0 +1,26 @@
+<%= form_for(@flow) do |f| %>
+  <% if @flow.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@flow.errors.count, "error") %> prohibited this flow from being saved:</h2>
+
+      <ul>
+      <% @flow.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= f.hidden_field :type %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :sensor %><br />
+    <%= f.select(:sensor_id,options_for_select(@current_user.sensors.map{|s|[s.name,s.id]},:selected => @action.sensor_id)) %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

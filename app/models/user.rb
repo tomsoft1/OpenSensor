@@ -53,6 +53,7 @@ class User
   has_many :sensors
   has_many :dashboards
   has_many :triggers
+  has_many :flows
   has_many :twitter_credentials
 
   field  :api_key, :type=>String

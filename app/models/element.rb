@@ -1,4 +1,4 @@
-# Action is base class for action on feed/sensors
+# Element is base class for action on feed/sensors
 # typically:
 # trigger, widget
 #
@@ -6,7 +6,7 @@
 #
 # TODO: remove trick with sensor_id/sensor and keep only sensors, initially there was a 1-N connection
 #
-class Action
+class Element
   include Mongoid::Document
   field :name, type: String
   field :type, type: String
@@ -54,7 +54,7 @@ public
   end
   def get_prototype
   	res=self.element_prototype
-  	if res==nil then res=Action.find_prototype(type) end
+  	if res==nil then res=Element.find_prototype(type) end
   	res
   end
 
