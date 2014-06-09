@@ -9,7 +9,7 @@ class FlowAvg < Flow
 	def get_output_feed
 		if !output_feed.first
 			puts "Creating feed"
-			feed=Sensor.new(:name=>"#{name}_avg",:type=>"Float",:user=>sensor.user)
+			feed=Sensor.new(:name=>"#{name}_avg",:type=>"Float",:user=>sensor.user,:is_saved=>false)
 			output_feed<<feed
 			self.save
 			feed.save
@@ -21,7 +21,8 @@ class FlowAvg < Flow
   def measure_added sensor,measure
     # check previous measure
     puts "computeAvg"
-    computeAvg
+    get_output_feed.add_measure computeAvg,measure.timeStamp
+    
   end
 
 	def computeAvg range=30.minutes

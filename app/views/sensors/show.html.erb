@@ -174,7 +174,7 @@ function updateDatas(message){
 <div class="col-xs-3">
 <H4>Last Measures:</H4>
 <table class="table" id="last_table" width=200px>
-<% @sensor.measures.desc(:timeStamp)limit(20).each do |measure| %>
+<% @sensor.measures.desc(:timeStamp).limit(20).each do |measure| %>
 <tr>
   <td><%= measure.timeStamp %></td>
   <td><%= "#{measure.value} #{@sensor.unit}"  %></td>
