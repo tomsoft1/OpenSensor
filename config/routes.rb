@@ -1,6 +1,7 @@
 OpenSensor::Application.routes.draw do
   resources :flows
   resources :flow_power_daily_sum, controller: 'flows', type: 'Flow' 
+  resources :flow_avg,             controller: 'flows', type: 'Flow' 
 
 
   resources :elements

@@ -40,8 +40,12 @@ public
 
   end
   def sensor=(in_sensor)
-  	puts "Assingment #{in_sensor.name}"
-  	self.sensors=[in_sensor]
+  	puts "Assingment #{in_sensor}"
+  	if in_sensor
+	  	self.sensors=[in_sensor]
+	  else
+	  	self.sensors=[]
+	  end
   end
   def sensor_id
   	if sensors.size>0
@@ -52,7 +56,11 @@ public
   end
    def sensor_id=(in_sensor_id)
    	puts "setting sensor_id"
-   	self.sensor=Sensor.find(in_sensor_id)
+   	if in_sensor_id
+	   	self.sensor=Sensor.find(in_sensor_id)
+	else
+		self.sensor=nil
+	end
   end
   def get_prototype
   	res=self.element_prototype
@@ -91,7 +99,7 @@ public
 
     if !params then return end
     if params[:sensor_id]
-      self.sensor_ids=[params[:sensor_id]]
+      self.sensor_id=params[:sensor_id]
       params.delete :sensor_id
     end
     if proto=get_prototype

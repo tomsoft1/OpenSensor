@@ -20,7 +20,7 @@ class Measure
   	#	delta=lastMesure.timeStamp-lastTime
   	#	puts "#{delta}"
   	total=0
-  	measures.where(:timeStamp.gte=>startTime,:timeStamp.lt=>endTime).each do |m|
+  	measures.where(:timeStamp.gte=>startTime,:timeStamp.lt=>endTime).asc(:timeStamp).each do |m|
   		delta=m.timeStamp-lastTime
   		total+=m.value*delta/3600.0
   		#puts "Delta:#{delta} Watt:#{m.value} Total:#{total}"
