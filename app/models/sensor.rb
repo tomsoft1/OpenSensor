@@ -9,7 +9,7 @@ class Sensor
   field :is_saved, type: Boolean, :default=>true
 
   # Last value, used manyly when feed is notsaved
-  embeds_one :last_measure
+  field :last_measure, type:Hash 
 
   belongs_to :device
   has_many :measures # only is is_saved==true
@@ -63,7 +63,7 @@ class Sensor
   def publish(force_publish=false)
     if self[:active_channel]==true ||force_publish
       puts "Published:#{self.name} #{self.last_measure}"
-      Pusher["sensor-#{self.id}"].trigger('update', self.last_measure.to_simple_json)
+      Pusher["sensor-#{self.id}"].trigger('update', self.last_measure.to_json)
     else
       puts "Channel:#{self.name} inactive"
     end
@@ -81,9 +81,9 @@ class Sensor
 
 
 
-  def last_measure
-  	self.measures.desc(:timeStamp).first||Measure.new(:value=>"N/A")
-  end
+#  def last_measure
+#  	self.measures.desc(:timeStamp).first||Measure.new(:value=>"N/A")
+#  end
   def device=in_device
   	self[:device_id]=in_device.id
   	self.user=in_device.user
@@ -111,9 +111,14 @@ class Sensor
     if is_saved
   	   m.save
     end
-
+    self.set(:last_measure,{:timeStamp=>m.timeStamp,:value=>m.value})
     publish_update m
-    elements.each{|t| t.measure_added self,m}
+    # Update all elemet execpt those which are output
+    elements.each do |t| 
+      if !t.output_feed.include?(self)
+        t.measure_added self,m
+      end
+    end
     return m
   end
 

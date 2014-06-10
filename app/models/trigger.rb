@@ -1,4 +1,4 @@
-class Trigger < Action
+class Trigger < Element
 	field :target, type:String
 	field :limit, type: Float
 	field :operator, type: String

@@ -22,16 +22,16 @@ class FlowAvg < Flow
     # check previous measure
     puts "computeAvg"
     get_output_feed.add_measure computeAvg,measure.timeStamp
-    
   end
 
 	def computeAvg range=30.minutes
     total=0
     count=0
     lastVal=Time.now-range
-    sensor.measures.where(:timeStamp.gte=>lastVal).each do |m|
+    sensor.measures.where(:timeStamp.gte=>lastVal).asc(:timeStamp).each do |m|
       total+=m.value*(m.timeStamp-lastVal)
       lastVal=m.timeStamp
+      puts "#{m.inspect} #{count} #{total} #{total/(lastVal-(Time.now-range))}"
       count+=1
     end
     puts "Avg:#{total/range} elemnt:#{count} range:#{range}"

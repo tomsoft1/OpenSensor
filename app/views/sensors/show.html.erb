@@ -9,7 +9,7 @@ Highcharts.setOptions({ global: {timezoneOffset:(new Date()).getTimezoneOffset()
 // Pusher
 Pusher.log = function(message) {
   if (window.console && window.console.log) {
-//            window.console.log(message);
+            window.console.log(message);
   }
 };
 <% use_presence=false %>
@@ -68,9 +68,15 @@ curl -i --request POST -H 'Content-Type: application/json;'  --data '[{"sensor_i
 <div id="sensor_chart" style="height: 400px; min-width: 310px"></div>
 <script>
 function updateGraph(message){
+  console.log("update graph");
+  console.log(message);
   var toAdd=[new Date(message.timeStamp).getTime(),message.value];
-  chart.series[0].addPoint(toAdd,true,true)
-
+  console.log(chart.series[0]);
+  if(chart.series[0].data.length<100){
+    chart.series[0].addPoint(toAdd);
+  }else{
+   chart.series[0].addPoint(toAdd,true,true);
+  }
 }
 
 render_data=function(data) {
@@ -180,6 +186,7 @@ function updateDatas(message){
   <td><%= "#{measure.value} #{@sensor.unit}"  %></td>
 </tr>
 <% end %>
+<tr><td></td></tr>
 </table>
 </div>
 </div>
