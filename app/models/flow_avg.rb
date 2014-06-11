@@ -1,9 +1,8 @@
 
 
 class FlowAvg < Flow
-  field :daily_total, type: Float ,:default=>0
   field :last_update, type: Time
-
+  field :every , type:Integer ,:default=>5.minutes
   after_create :get_output_feed
 
 	def get_output_feed
@@ -21,7 +20,10 @@ class FlowAvg < Flow
   def measure_added sensor,measure
     # check previous measure
     puts "computeAvg"
-    get_output_feed.add_measure computeAvg,measure.timeStamp
+    if self.last_update==nil || Time.now-self.last_update>self.every
+      get_output_feed.add_measure computeAvg,measure.timeStamp
+      self.set(:last_update,measure.timeStamp)
+    end
   end
 
 	def computeAvg range=30.minutes

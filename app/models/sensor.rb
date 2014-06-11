@@ -120,7 +120,7 @@ class Sensor
     if is_saved
   	   m.save
     end
-    self.set(:last_measure,{"timeStamp=">m.timeStamp,"value"=>m.value})
+    self.set(:last_measure,{"timeStamp"=>m.timeStamp,"value"=>m.value})
     publish_update m
     # Update all elemet execpt those which are output
     elements.each do |t| 
