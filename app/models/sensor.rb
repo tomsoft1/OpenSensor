@@ -111,8 +111,8 @@ class Sensor
       res={:value=>"N/A",:timeStamp=>Time.now}
    end
     return Measure.new(:sensor   =>self,
-                       :value    =>res[:value],
-                       :timeStamp=>res[:timeStamp])
+                       :value    =>res["value"],
+                       :timeStamp=>res["timeStamp"])
   end
   def add_measure value,timeStamp=Time.now
     m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
@@ -120,7 +120,7 @@ class Sensor
     if is_saved
   	   m.save
     end
-    self.set(:last_measure,{:timeStamp=>m.timeStamp,:value=>m.value})
+    self.set(:last_measure,{"timeStamp=">m.timeStamp,"value"=>m.value})
     publish_update m
     # Update all elemet execpt those which are output
     elements.each do |t| 

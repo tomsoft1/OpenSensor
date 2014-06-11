@@ -12,7 +12,7 @@
     console.log(this);
 	    this.gauge = new JustGage({
     	id: 'chart_div_<%= widget.id -%>', 
-   		 value: <%= widget.sensor.last_measure.value -%>, 
+   		 value: <%= widget.sensor.last_measure.value||0 -%>, 
    		 min: parseInt(this.params['min']),
    		 max: parseInt(this.params['max']),
     	title: "<%=widget.sensor.name %>",
