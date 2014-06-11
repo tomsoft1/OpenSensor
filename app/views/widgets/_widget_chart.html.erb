@@ -70,7 +70,12 @@ $(function () {
     tmp.on_update=function(message){
         var toAdd=[new Date(message.data.timeStamp).getTime(),message.data.value];
         console.log(toAdd);
-        this.chart.series[0].addPoint(toAdd,true,true)
+        var serie=this.chart.series[0];
+        if(serie.data.length<100){
+            serie.addPoint(toAdd);
+        }else{
+            serie.addPoint(toAdd,true,true);
+        }
     }
     tmp.on_resize=function(message,widget){
         console.log("one resize");

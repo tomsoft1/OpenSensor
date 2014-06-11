@@ -105,6 +105,15 @@ class Sensor
 
   end
 
+  def last_measure
+    res= self[:last_measure]
+    if res==nil
+      res={:value=>"N/A",:timeStamp=>Time.now}
+   end
+    return Measure.new(:sensor   =>self,
+                       :value    =>res[:value],
+                       :timeStamp=>res[:timeStamp])
+  end
   def add_measure value,timeStamp=Time.now
     m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
     puts m
