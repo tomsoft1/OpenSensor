@@ -15,7 +15,7 @@ class SensorsController < ApplicationController
   # GET /sensors/1.json
   def show
     @sensor = Sensor.find(params[:id])
-    if @sensor.user!=current_user then raise "Sensor does not belongs to you"; end
+    if @sensor.user!=@current_user then raise "Sensor does not belongs to you"; end
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @sensor }
@@ -24,7 +24,7 @@ class SensorsController < ApplicationController
 
   def drop
     @sensor = Sensor.find(params[:id])
-    if @sensor.user!=current_user then raise "Sensor does not belongs to you"; end
+    if @sensor.user!=@current_user then raise "Sensor does not belongs to you"; end
     @sensor.measures.delete_all
     redirect_to @sensor
 
@@ -70,7 +70,7 @@ class SensorsController < ApplicationController
   # PUT /sensors/1.json
   def update
     @sensor = Sensor.find(params[:id])
-    if @sensor.user!=current_user then raise "Sensor does not belongs to you"; end
+    if @sensor.user!=@current_user then raise "Sensor does not belongs to you"; end
 
     respond_to do |format|
       if @sensor.update_attributes(params[:sensor])
@@ -87,6 +87,7 @@ class SensorsController < ApplicationController
   # DELETE /sensors/1.json
   def destroy
     @sensor = Sensor.find(params[:id])
+    if @sensor.user!=@current_user then raise "Sensor does not belongs to you"; end
     @sensor.destroy
 
     respond_to do |format|

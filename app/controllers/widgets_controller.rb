@@ -1,8 +1,9 @@
 class WidgetsController < ApplicationController
+ before_filter :authenticate_user!
   # GET /widgets
   # GET /widgets.json
   def index
-    @widgets = Widget.all
+    @widgets =  @current_user.widget
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,7 +15,7 @@ class WidgetsController < ApplicationController
   # GET /widgets/1.json
   def show
     @widget = Widget.find(params[:id])
-
+    if @widget.user!=@current_user then raise "Widget does not belongs to you"; end;
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @widget }
