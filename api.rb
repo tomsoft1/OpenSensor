@@ -85,11 +85,11 @@ class OpenSensorApi < Sinatra::Base
 			sensor=Sensor.find params["sensor_id"]
 			limit=params[:numbers]||100_000
 		    page=params[:page]||0
-		    criteria=sensor.measures.asc(:timeStamp).skip(limit*page).limit(limit)
+		    criteria=sensor.measures.desc(:timeStamp).skip(limit*page).limit(limit)
 		    if(params[:startTime])then criteria=criteria.where(:timeStamp.gte=>conv_time(params[:timeStamp])) end
 		    if(params[:endTime])then criteria=criteria.where(:timeStamp.lt=>conv_time(params[:endTime])) end
 			puts sensor
-			jsonp criteria.map{|m|[m.timeStamp.to_i*1000,m.value]}
+			jsonp criteria.map{|m|[m.timeStamp.to_i*1000,m.value]}.reverse
 		rescue Exception=>e
 		   {:error=>e.to_s}
 		end
