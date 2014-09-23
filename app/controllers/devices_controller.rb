@@ -46,7 +46,7 @@ class DevicesController < ApplicationController
   def create
     @device = Device.create(params[:device])
     @device.user=current_user
-    if @device.type=="Akeru" then @device[:sigfox]="";@device[:sigfox_device_id]=nil; end
+    if @device.type=="Akeru" &&  @device.sigfox_device_id==nil then @device[:sigfox]="";@device[:sigfox_device_id]=nil; end
     respond_to do |format|
       if @device.save
         format.html { redirect_to @device, notice: 'Device was successfully created.' }
