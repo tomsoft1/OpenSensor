@@ -5,7 +5,7 @@ class Device
 	field :description, type: String
 	field :type, type: String,:default=>"Device"
 	field :sigfox,  type: String
-	field :sigfox_device_id, type:Integer
+	field :sigfox_device_id, type:String
 	validates_presence_of :name
 	belongs_to :user
 	has_many :sensors
