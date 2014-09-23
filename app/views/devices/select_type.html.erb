@@ -3,7 +3,8 @@ Select Device Type:
 
 <div class="device_selector">
 <%= link_to "Default",new_device_path(:type=>"default"),:class=>"btn btn-primary" -%><br><br>
-<%= link_to "Akeru",new_device_path(:type=>"akeru"),:class=>"btn btn-primary" -%>
+<%= link_to "Akeru",new_device_path(:type=>"akeru"),:class=>"btn btn-primary" -%><br><br>
+<%= link_to "SparkCore",new_device_path(:type=>"spark"),:class=>"btn btn-primary" -%>
 </div>
 
 <%= link_to 'Back', devices_path %>

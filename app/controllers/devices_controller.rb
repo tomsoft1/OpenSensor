@@ -37,7 +37,7 @@ class DevicesController < ApplicationController
   # GET /devices/1/edit
   def edit
     @device = Device.find(params[:id])
-    if @device.type=="Akeru"  && @device[:sigfox]==nil then @device[:sigfox]="" end
+    if @device.type=="akeru"  && @device[:sigfox]==nil then @device[:sigfox]="" end
 
   end
 
@@ -64,6 +64,7 @@ class DevicesController < ApplicationController
     @device = Device.find(params[:id])
 
     respond_to do |format|
+      puts params
       if @device.update_attributes(params[:device])
         format.html { redirect_to @device, notice: 'Device was successfully updated.' }
         format.json { head :no_content }
