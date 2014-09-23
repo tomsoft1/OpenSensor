@@ -115,7 +115,11 @@ $(function() {
    google.maps.event.addDomListener(window, 'load', init_map);
    var map;
    function init_map() {
+    <% if @sensor.last_measure.value %>
      var latLon = new google.maps.LatLng(<%= "#{@sensor.last_measure.value['lat']},#{@sensor.last_measure.value['lon']}" -%>);
+     <% else %>
+      var latlon = new google.maps.LatLng(48.51,2.21);
+     <% end %>
 
      var mapOptions = {
        center: latLon,
