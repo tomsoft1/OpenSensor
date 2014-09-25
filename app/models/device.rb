@@ -29,7 +29,7 @@ class Device
 			sensor=Sensor.find_by_name_or_create("signal",self)
 			measure=sensor.add_measure(params["signal"].to_f,time )
 			sensors<<sensor
-			f.write("Adding: #{measure.to_s}\n")
+			f.write("Adding: #{measure.inspect}\n")
 		end
 		f.close
 		Sensor.check_and_update sensors
