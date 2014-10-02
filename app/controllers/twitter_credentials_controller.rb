@@ -35,13 +35,6 @@ class TwitterCredentialsController < ApplicationController
 
         )
         puts access_token.inspect
-        puts "Sessions:"+session[:token]
-        puts "secret:"+session[:secret]
-        puts "Verifier:"+ params[:oauth_verifier]
-
-        puts "Access token:"+access_token.token
-        puts "Access token secret:"+access_token.secret
-        puts "uid"+access_token.params[:user_id]
         puts "screen name"+access_token.params[:screen_name]
         cred=TwitterCredential.where(:user=>@current_user,:twitter_id=>access_token.params[:user_id].to_s).first
         if cred==nil
