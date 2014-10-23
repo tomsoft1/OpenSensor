@@ -61,13 +61,17 @@ class OpenSensorApi < Sinatra::Base
 		@current_user.sensors.as_json
 	end
 	post "/sensor/:sensor_id" do
-		sensor=Sensor.find params["sensor_id"]
-		puts sensor
-		newMeasure=JSON.parse request.body.read
-		measure=Measure.new(newMeasure)
-		measure.sensor=sensor
-		measure.save
-		{:code=>1}.to_json
+		begin
+			sensor=Sensor.find params["sensor_id"]
+			puts sensor
+			newMeasure=JSON.parse request.body.read
+			measure=Measure.new(newMeasure)
+			measure.sensor=sensor
+			measure.save
+			{:code=>1}.to_json
+		rescue Exception=>e
+			{:error=>e.to_s}
+		end
 	end
 
 	def conv_time in_time
@@ -100,22 +104,30 @@ class OpenSensorApi < Sinatra::Base
 	end
 
 	get "/device/:device_id" do
-		device=Device.find params["device_id"]
-		res=device.as_json
-		res[:sensors]=device.sensors.as_json
-		res.to_json
+		begin
+			device=Device.find params["device_id"]
+			res=device.as_json
+			res[:sensors]=device.sensors.as_json
+			res.to_json
+		rescue Exception=>e
+			{:error=>e.to_s}
+		end
 	end
 
 	post "/device/sigfox" do
-		if params[:device]
-			device=Device.where(:sigfox_device_id=>params[:device]).first
-			if device
-				device.parse_binary_data params
-				{:done=>"ok"}.to_json
+		begin
+			if params[:device]
+				device=Device.where(:sigfox_device_id=>params[:device]).first
+				if device
+					device.parse_binary_data params
+					{:done=>"ok"}.to_json
+				else
+					halt 302,{:error=>"Device not found"}.to_json
+				end
 			else
-				halt 302,{:error=>"Device not found"}.to_json
 			end
-		else
+		rescue Exception=>e
+			{:error=>e.to_s}
 		end
 	end
 
@@ -134,39 +146,43 @@ class OpenSensorApi < Sinatra::Base
 	#
 	#
 	post "/device/:device_id" do
-		errors=[]
-		device=Device.find params["device_id"]
-		sensors=[]
-		newMeasure=JSON.parse request.body.read
-		newMeasure.each do |sensor_data|
-			begin
-				if sensor_data['sensor_id']
-					sensor=Sensor.where(:id=>sensor_data["sensor_id"],:device=>device).first
-				else
-					sensor=Sensor.find_by_name_or_create sensor_data["name"],device
+		begin
+			errors=[]
+			device=Device.find params["device_id"]
+			sensors=[]
+			newMeasure=JSON.parse request.body.read
+			newMeasure.each do |sensor_data|
+				begin
+					if sensor_data['sensor_id']
+						sensor=Sensor.where(:id=>sensor_data["sensor_id"],:device=>device).first
+					else
+						sensor=Sensor.find_by_name_or_create sensor_data["name"],device
+					end
+				rescue Exception =>e
+					puts e
+					sensor=nil
+					errors<<e.to_s
 				end
-			rescue Exception =>e
-				puts e
-				sensor=nil
-				errors<<e.to_s
-			end
-			if sensor
-				if sensor_data["data"]  then sensor_data=sensor_data["data"] else sensor_data=[sensor_data] end
-				puts sensor_data
-				sensor_data.each do |data|
-					puts"data:#{data}"
-					measure=sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
+				if sensor
+					if sensor_data["data"]  then sensor_data=sensor_data["data"] else sensor_data=[sensor_data] end
+					puts sensor_data
+					sensor_data.each do |data|
+						puts"data:#{data}"
+						measure=sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
+					end
+					sensors<<sensor
 				end
-				sensors<<sensor
 			end
+			res={}
+			Sensor.check_and_update sensors
+			if errors.size>0 then res[:errors]=errors.join(',')
+			else
+				res[:msg]="Updated #{sensors.count}"
+			end
+			res.to_json
+		rescue Exception=>e
+			{:error=>e.to_s}
 		end
-		res={}
-		Sensor.check_and_update sensors
-		if errors.size>0 then res[:errors]=errors.join(',')
-		else
-			res[:msg]="Updated #{sensors.count}"
-		end
-		res.to_json
 	end
 
 
