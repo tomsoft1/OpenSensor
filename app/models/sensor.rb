@@ -22,8 +22,8 @@ class Sensor
   Pusher.url = "http://#{PUSHER_KEY}:#{PUSHER_SECRET}@api.pusherapp.com/apps/#{PUSHER_APP}"
   
   def Sensor.find_by_name_or_create name,device
-    sensor=Sensor.where(:device=>device,:name=>name).first
-    if sensor==nil
+    sensor = Sensor.where(:device=>device,:name=>name).first
+    if sensor == nil
       puts "Creating sensor:#{name}"
       sensor=Sensor.new(:name=>name)
       sensor.device=device
@@ -85,20 +85,25 @@ class Sensor
 #  	self.measures.desc(:timeStamp).first||Measure.new(:value=>"N/A")
 #  end
   def device=in_device
-  	self[:device_id]=in_device.id
-  	self.user=in_device.user
+  	self[:device_id] = in_device.id
+  	self.user = in_device.user
   end
+
   def delete_measures
     self.measures.delete_all
   end
-  def publish_update m
+
+  def publish_update measure
+
     publish
     dashboards={}
+
     self.elements.where(:_type=>Widget).each do |widget|
         puts "Widget #{widget.name} in dashboard:#{widget.dashboard.name}"
-        to_send={:_id=>widget.id,:data=>m.as_json}
+        to_send={:_id=>widget.id,:data=>measure.as_json}
         dashboards[widget.dashboard]=(dashboards[widget.dashboard]||[])+[to_send]
     end
+
     dashboards.each do |dashboard,widgets|
       Sensor.publish_on dashboard,widgets 
     end
@@ -106,28 +111,33 @@ class Sensor
   end
 
   def last_measure
-    res= self[:last_measure]
-    if res==nil
-      res={:value=>"N/A",:timeStamp=>Time.now}
+    res = self[:last_measure]
+    if res == nil
+      res = {:value=>"N/A",:timeStamp=>Time.now}
    end
     return Measure.new(:sensor   =>self,
                        :value    =>res["value"],
                        :timeStamp=>res["timeStamp"])
   end
+
   def add_measure value,timeStamp=Time.now
     m=Measure.new(:sensor=>self,:value=>value,:timeStamp=>timeStamp)
     puts m
+
     if is_saved
   	   m.save
     end
+
     self.set(:last_measure,{"timeStamp"=>m.timeStamp,"value"=>m.value})
     publish_update m
+
     # Update all elemet execpt those which are output
     elements.each do |t| 
       if !t.output_feed.include?(self)
         t.measure_added self,m
       end
     end
+
     return m
   end
 

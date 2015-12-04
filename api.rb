@@ -86,12 +86,12 @@ class OpenSensorApi < Sinatra::Base
 
 	get "/sensor/:sensor_id/measures" do
 		begin
-			sensor=Sensor.find params["sensor_id"]
-			limit=params[:numbers]||100_000
-		    page=(params[:page]||0).to_i
-		    criteria=sensor.measures.desc(:timeStamp).skip(limit*page).limit(limit)
-		    if(params[:startTime])then criteria=criteria.where(:timeStamp.gte=>conv_time(params[:startTime])) end
-		    if(params[:endTime])then criteria=criteria.where(:timeStamp.lt=>conv_time(params[:endTime])) end
+			sensor = Sensor.find params["sensor_id"]
+			limit = params[:numbers]||100_000
+		    page = (params[:page]||0).to_i
+		    criteria = sensor.measures.desc(:timeStamp).skip(limit*page).limit(limit)
+		    if(params[:startTime]) then criteria = criteria.where(:timeStamp.gte=>conv_time(params[:startTime])) end
+		    if(params[:endTime]) then criteria = criteria.where(:timeStamp.lt=>conv_time(params[:endTime])) end
 			puts sensor
 			jsonp criteria.map{|m|[m.timeStamp.to_i*1000,m.value]}.reverse
 		rescue Exception=>e
@@ -105,9 +105,9 @@ class OpenSensorApi < Sinatra::Base
 
 	get "/device/:device_id" do
 		begin
-			device=Device.find params["device_id"]
-			res=device.as_json
-			res[:sensors]=device.sensors.as_json
+			device = Device.find params["device_id"]
+			res = device.as_json
+			res[:sensors] = device.sensors.as_json
 			res.to_json
 		rescue Exception=>e
 			{:error=>e.to_s}
@@ -117,7 +117,7 @@ class OpenSensorApi < Sinatra::Base
 	post "/device/sigfox" do
 		begin
 			if params[:device]
-				device=Device.where(:sigfox_device_id=>params[:device]).first
+				device = Device.where(:sigfox_device_id=>params[:device]).first
 				if device
 					device.parse_binary_data params
 					{:done=>"ok"}.to_json
@@ -133,13 +133,13 @@ class OpenSensorApi < Sinatra::Base
 
 	post "/device/:device_id/binary" do
 		begin
-			sensors=[]
-			device=Device.find params["device_id"]
+			sensors = []
+			device = Device.find params["device_id"]
 			device.parse_binary_data params
 			{:done=>"ok"}.to_json
 		rescue Exception => e
 			puts "ERROR:#{e.to_s}"
-			{:error =>e.to_s}.to_json
+			{:error => e.to_s}.to_json
 		end
 	end
 
@@ -147,20 +147,20 @@ class OpenSensorApi < Sinatra::Base
 	#
 	post "/device/:device_id" do
 		begin
-			errors=[]
-			device=Device.find params["device_id"]
-			sensors=[]
-			newMeasure=JSON.parse request.body.read
+			errors = []
+			device = Device.find params["device_id"]
+			sensors = []
+			newMeasure = JSON.parse request.body.read
 			newMeasure.each do |sensor_data|
 				begin
 					if sensor_data['sensor_id']
-						sensor=Sensor.where(:id=>sensor_data["sensor_id"],:device=>device).first
+						sensor = Sensor.where(:id=>sensor_data["sensor_id"],:device=>device).first
 					else
-						sensor=Sensor.find_by_name_or_create sensor_data["name"],device
+						sensor = Sensor.find_by_name_or_create sensor_data["name"],device
 					end
 				rescue Exception =>e
 					puts e
-					sensor=nil
+					sensor = nil
 					errors<<e.to_s
 				end
 				if sensor
@@ -168,7 +168,7 @@ class OpenSensorApi < Sinatra::Base
 					puts sensor_data
 					sensor_data.each do |data|
 						puts"data:#{data}"
-						measure=sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
+						measure = sensor.add_measure(data["value"],data["time_stamp"]||Time.now )
 					end
 					sensors<<sensor
 				end
@@ -177,7 +177,7 @@ class OpenSensorApi < Sinatra::Base
 			Sensor.check_and_update sensors
 			if errors.size>0 then res[:errors]=errors.join(',')
 			else
-				res[:msg]="Updated #{sensors.count}"
+				res[:msg] = "Updated #{sensors.count}"
 			end
 			res.to_json
 		rescue Exception=>e
