@@ -25,7 +25,7 @@ Features:
 Not yet done:
 * support for MQTT
 * two ways interaction (not only collect but interact)
-* graphical ineraction toolki creation (like NodeRed)
+* graphical ineraction toolkit creation (like NodeRed)
 
 License
 
