@@ -18,13 +18,13 @@ class Device
 
 		if params["time"] then Time.at params["time"].to_i end
 
-		decode=SigfoxTool.convert JSON.parse(self.sigfox.gsub(/\'/,'"')),params["data"]
+		decode = SigfoxTool.convert JSON.parse(self.sigfox.gsub(/\'/,'"')),params["data"]
 		f.write("Converted:#{decode}\n")
 
 		decode.each do |key,value|
-			sensor=Sensor.find_by_name_or_create key,self
+			sensor = Sensor.find_by_name_or_create key,self
 			if value.class == Hash && value["lat"]!=nil then sensor.set(:type,"Position") end
-			measure=sensor.add_measure(value,time )
+			measure = sensor.add_measure(value,time )
 			f.write("Adding: #{measure.inspect}\n")
 			sensors<<sensor
 		end

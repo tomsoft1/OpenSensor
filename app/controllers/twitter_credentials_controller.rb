@@ -1,5 +1,5 @@
 class TwitterCredentialsController < ApplicationController
-   before_filter :authenticate_user!
+  before_filter :authenticate_user!
 
   def connect
     puts "In connect"
@@ -8,8 +8,8 @@ class TwitterCredentialsController < ApplicationController
     puts "Source:"+session[:twitter_referer].to_s
 
     client =TwitterOAuth::Client.new(
-    :consumer_secret=>TWITTER_CONSUMER_SECRET,
-    :consumer_key=>TWITTER_CONSUMER_KEY)
+        :consumer_secret => TWITTER_CONSUMER_SECRET,
+        :consumer_key => TWITTER_CONSUMER_KEY)
     puts client.inspect
     puts "Callback: http://#{request.env['SERVER_NAME']}:#{request.env['SERVER_PORT']}/twitter_credentials/callback"
     requestOauth= client.request_token(:oauth_callback => "http://#{request.env['SERVER_NAME']}:#{request.env['SERVER_PORT']}/twitter_credentials/callback")
@@ -26,28 +26,28 @@ class TwitterCredentialsController < ApplicationController
       else
         puts params.to_s
         client =TwitterOAuth::Client.new(
-        :consumer_secret=>TWITTER_CONSUMER_SECRET,
-        :consumer_key=>TWITTER_CONSUMER_SECRET)
+            :consumer_secret => TWITTER_CONSUMER_SECRET,
+            :consumer_key => TWITTER_CONSUMER_SECRET)
         access_token = client.authorize(
-        session[:token],
-        session[:secret],
-        :oauth_verifier => params[:oauth_verifier]
+            session[:token],
+            session[:secret],
+            :oauth_verifier => params[:oauth_verifier]
 
         )
         puts access_token.inspect
         puts "screen name"+access_token.params[:screen_name]
-        cred=TwitterCredential.where(:user=>@current_user,:twitter_id=>access_token.params[:user_id].to_s).first
+        cred=TwitterCredential.where(:user => @current_user, :twitter_id => access_token.params[:user_id].to_s).first
         if cred==nil
-          cred=TwitterCredential.where(:user=>@current_user,:screen_name=>access_token.params[:screen_name]).first
+          cred=TwitterCredential.where(:user => @current_user, :screen_name => access_token.params[:screen_name]).first
         end
         if cred==nil
-          cred=TwitterCredential.new(:user=>@current_user)
+          cred=TwitterCredential.new(:user => @current_user)
         end
         cred.twitter_id=access_token.params[:user_id]
         cred.screen_name=access_token.params[:screen_name]
         cred.token_access=access_token.token
         cred.token_secret=access_token.secret
-        cred.save        
+        cred.save
         redirect=session[:twitter_referer]
         session[:twitter_referer]=nil
         # If there is a current trigger being creaed
@@ -58,27 +58,28 @@ class TwitterCredentialsController < ApplicationController
             trigger.target=cred.screen_name
             trigger.save
             session[:trigger]=nil
-             flash.notice="Warning,you've registered with a different twitter account, this will be updated"
+            flash.notice="Warning,you've registered with a different twitter account, this will be updated"
           end
 
         end
 
         # Do a test
-        puts  "Authorized: #{client.authorized?}"
+        puts "Authorized: #{client.authorized?}"
         # if  !client.authorized?
         #   flash[:notice]="error authorization"
         # end
         if redirect then
           redirect_to redirect
         else
-          redirect_to :action=>"show"
+          redirect_to :action => "show"
         end
       end
     rescue Exception => e
       flash.notice="error while getting authorization"
-        redirect_to "/"
+      redirect_to "/"
     end
   end
+
   # GET /twitter_credentials
   # GET /twitter_credentials.json
   def index

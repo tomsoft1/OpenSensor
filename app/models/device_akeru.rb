@@ -4,6 +4,6 @@ class DeviceAkeru < Device
 	after_create :setType
 
 	def setType
-		self.type="Akeru"
+		self.type = "Akeru"
 	end
 end

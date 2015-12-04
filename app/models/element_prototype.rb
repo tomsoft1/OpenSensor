@@ -6,6 +6,7 @@ class ElementPrototype
   embeds_many :parameter_def
   has_many :widgets
 end
+
 class ParameterDef
     include Mongoid::Document
 	field :name, type:String

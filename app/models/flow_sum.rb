@@ -33,7 +33,7 @@ class FlowPowerDailySum < Flow
     end
     puts "Current total:#{daily_total}"
     self.daily_total+=measure.value
-    self.last_update=measure.timeStamp
+    self.last_update = measure.timeStamp
     self.save
   end
 
