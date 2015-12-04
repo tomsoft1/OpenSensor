@@ -76,7 +76,7 @@ class OpenSensorApi < Sinatra::Base
 
 	def conv_time in_time
 		times=in_time.split('_')
-		if time==3
+		if times.size==3
 			return Time.utc(times[2].to_i,times[1].to_i,times[0].to_i)
 		elsif times.size==5
 			return Time.utc(times[2].to_i,times[1].to_i,times[0].to_i,times[3].to_i,times[4].to_i)
@@ -88,9 +88,9 @@ class OpenSensorApi < Sinatra::Base
 		begin
 			sensor=Sensor.find params["sensor_id"]
 			limit=params[:numbers]||100_000
-		    page=params[:page]||0
+		    page=(params[:page]||0).to_i
 		    criteria=sensor.measures.desc(:timeStamp).skip(limit*page).limit(limit)
-		    if(params[:startTime])then criteria=criteria.where(:timeStamp.gte=>conv_time(params[:timeStamp])) end
+		    if(params[:startTime])then criteria=criteria.where(:timeStamp.gte=>conv_time(params[:startTime])) end
 		    if(params[:endTime])then criteria=criteria.where(:timeStamp.lt=>conv_time(params[:endTime])) end
 			puts sensor
 			jsonp criteria.map{|m|[m.timeStamp.to_i*1000,m.value]}.reverse

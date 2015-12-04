@@ -4,8 +4,9 @@ require ::File.expand_path('../config/environment',  __FILE__)
 load 'api.rb'
 # Sinatra logs are in stdout...
 log = File.new("log/sinatra.log", "a+")
-$stdout.reopen(log)
-$stderr.reopen(log)
+# reopen does not works with passenger
+#$stdout.reopen(log)
+#$stderr.reopen(log)
 
 #run OpenSensor::Application
 
