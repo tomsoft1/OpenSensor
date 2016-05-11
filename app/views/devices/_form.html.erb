@@ -19,7 +19,7 @@
     <%= f.label :description %><br />
     <%= f.text_field :description %>
   </div>
-  <% if @device.type=="Akeru" || @device.type == "LoRa" %>
+  <% if @device.type=="Akeru" || @device.type == "Lora" %>
       <div>
     <%= f.label :sigfox_device_id %><br />
     <%= f.text_field :sigfox_device_id   %>
