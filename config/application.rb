@@ -36,6 +36,7 @@ module OpenSensor
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += %W(#{config.root}/lib)
+#    config.autoload_paths << Rails.root.join('lib')
 
 
     # Only load the plugins named here, in the order given (default is alphabetical).
@@ -61,6 +62,7 @@ module OpenSensor
 
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
+
 
     # Use SQL instead of Active Record's schema dumper when creating the database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,

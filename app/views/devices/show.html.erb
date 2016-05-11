@@ -11,7 +11,7 @@
   <b>Description:</b>
   <%= @device.description %>
 </p>
-  <% if @device.type=="Akeru" %>
+  <% if @device.type=="Akeru" || @device.type == "LoRa" %>
 <p>
   <b>Sigfox device id:</b>
   <%= @device.sigfox_device_id %>

@@ -1,4 +1,4 @@
-class SigfoxTool
+class SigfoxTools
 
   # Extract a single data from the data feed and convert it to a correct hexa value
   # note that size is in byte, so 2 chars
@@ -23,6 +23,8 @@ class SigfoxTool
   def self.convert binding, data, result={}, offset=0
     puts "Being callded with #{binding} #{data}"
     puts "Current #{result}"
+
+
     binding.each do |a_binding|
       case a_binding["type"]
         when "position"

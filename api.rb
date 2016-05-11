@@ -131,6 +131,23 @@ class OpenSensorApi < Sinatra::Base
 		end
 	end
 
+	post "/device/lora" do
+		begin
+			if params[:device]
+				device = Device.where(:external_device_id=>params[:device]).first
+				if device
+					LoraDecoder.decode device,params
+					{:done=>"ok"}.to_json
+				else
+					halt 302,{:error=>"Device not found"}.to_json
+				end
+			else
+			end
+		rescue Exception=>e
+			{:error=>e.to_s}
+		end
+	end
+
 	post "/device/:device_id/binary" do
 		begin
 			sensors = []

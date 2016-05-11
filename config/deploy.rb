@@ -11,7 +11,7 @@ set :repo_url, 'git@github.com:tomsoft1/OpenSensor.git'
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/home/tomsoft/www/opensensor'
 set :rvm_type, :system
-set :rvm_ruby_version, '1.9.3@opensensor'
+set :rvm_ruby_version, '1.9.3-p374@opensensor'
 # Default value for :scm is :git
 # set :scm, :git
 

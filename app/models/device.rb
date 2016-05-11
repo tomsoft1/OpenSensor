@@ -6,6 +6,10 @@ class Device
 	field :type, type: String,:default=>"Device"
 	field :sigfox,  type: String
 	field :sigfox_device_id, type:String
+
+	alias_attribute :codec, :sigfox
+	alias_attribute	:external_device_id, :sigfox_device_id
+
 	validates_presence_of :name
 	belongs_to :user
 	has_many :sensors
@@ -18,7 +22,7 @@ class Device
 
 		if params["time"] then Time.at params["time"].to_i end
 
-		decode = SigfoxTool.convert JSON.parse(self.sigfox.gsub(/\'/,'"')),params["data"]
+		decode = SigfoxTools.convert JSON.parse(self.sigfox.gsub(/\'/,'"')),params["data"]
 		f.write("Converted:#{decode}\n")
 
 		decode.each do |key,value|
